@@ -74,12 +74,15 @@ pages_more_reverts = get_more_reverts('page')
 user_more_reverts = get_more_reverts('user')
 user_more_reverts = get_reverts_on_revisions(user_more_reverts)
 
-
 avg_reverts_on_revisions = n_reverts / n_revisions
 reverts_for_month = get_reverts_for_month()
 
 t2 = time.time()
 # %%
+
+
+
+
 
 
 # plot the number of revert for each month 
