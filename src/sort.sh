@@ -3,4 +3,4 @@
 input_file=data/revisions.tsv
 output_file=data/sorted.tsv.bz2
 
-sort -t\t -k24 $input_file > bz2 > $output_file
+sort -t '\t' -k25,25 $input_file | bzip2 -c > $output_file

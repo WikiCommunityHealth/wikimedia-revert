@@ -14,7 +14,7 @@ dump_in = bz2.open(dataset_path, 'r')
 line = dump_in.readline()
 
 
-print('ora inizio a togliere tutto tranne le revisioni')
+print('ora inizio a togliere tutto tranne revert e revertati')
 while line != '':
     line = dump_in.readline().rstrip().decode('utf-8')[:-1]
     values = line.split('\t')
@@ -23,6 +23,10 @@ while line != '':
 
     if values[1] != 'revision':
         continue
+    
+    if values[64] == 'false' and values[67] == 'false': 
+        continue 
+
     
     output.write(line + '\n')
 
