@@ -1,23 +1,22 @@
 #%%
 import bz2
 import subprocess
-
+import os
 from datetime import datetime
 
-dump_in = open('/Users/alessiogandelli/wikipedia/lombardo.tsv', 'r')
-line = dump_in.readline()
 inizio = datetime.now()
 
-output = open("data/revisions.tsv", "w")
-
-
+dataset_path = '/Users/alessiogandelli/wikipedia/lombardo.tsv.bz2';
 input_file = "./data/revisions.tsv"
-output_file = "./data/sorted.tsv"
-prova2 = ["sort", "-t\t", "-k24", input_file, "-o", output_file ]
 
-print('ora inizio a filtrare')
+output = open(input_file, "w")
+dump_in = bz2.open(dataset_path, 'r')
+line = dump_in.readline()
+
+
+print('ora inizio a togliere tutto tranne le revisioni')
 while line != '':
-    line = dump_in.readline().rstrip()[:-1]
+    line = dump_in.readline().rstrip().decode('utf-8')[:-1]
     values = line.split('\t')
     if len(values) < 2:
         continue
@@ -28,11 +27,13 @@ while line != '':
     output.write(line + '\n')
 
 output.close()
-print('finito di filtrare ora inizio a sortare ')
-print(datetime.now()-inizio)
-process = subprocess.Popen(prova2).wait()
+dump_in.close()
+
+print('finito di filtrare ora inizio a sortare ', datetime.now()-inizio)
+subprocess.call('./src/sort.sh')
+print('sorted in ', datetime.now()-inizio)
 
 
-print('sortato')
-print(datetime.now()-inizio)
+os.remove(input_file)
+
 # %%
