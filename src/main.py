@@ -1,50 +1,106 @@
-#%%
+# %%
 import bz2
 import pandas as pd
 from datetime import datetime
 
+dataset = '/home/gandelli/dev/venv/dataset/sorted.tsv.bz2'
+
 
 #l'ultima colonna è fals invece che false 
-dump_in = bz2.open('./data/sorted.tsv.bz2', 'r')
-line = dump_in.readline()
+
+#%% dati utili 
 
 inizio = datetime.now()
-df =[]
-#TEMPO 
-#!! dataframe estrarre solo dati interessanti
-#cercare pagine controverse in base ai cluster di revert 
-# capire chi è il revertato e ricostruire catene 
-#aggiungere i revertati al df
-
- #TODO: usare un altro dataset 
 
 
-output = open('principala.tsv', "w")
 
-#%%
 #creo il dataframe 
-i=0
-while line != '':
-    i+=1
-    if i%100000 == 0:
-        print(datetime.now()-inizio)
+def get_DataFrame():
 
-    line = dump_in.readline().rstrip().decode('utf-8')[:-1]
-    values = line.split('\t')
+    dump_in = bz2.open(dataset, 'r')
+    line = dump_in.readline()
+    df =[]
+    
 
-    if values[25] =='Pagina_principala':
-        output.write(line+ '\n')
+    while line != '':
+ 
+        line = dump_in.readline().rstrip().decode('utf-8')[:-1]
+        values = line.split('\t')
 
-    df.append(values)
+        df.append(values)
 
+    return pd.DataFrame(df)
 
-df = pd.DataFrame(df)
+df = get_DataFrame()    
 
+df = df.filter([3,4,7,25,34,64,67], axis = 1) 
+df.columns = ['timestamp','commento', 'utente','pagina' , 'edit_count','reverted', 'reverta' ]
+df_by_page = df.groupby(['pagina']).count().sort_values(by=['utente'], ascending=False)
 #%%
 
 #dovrebbe ordinare le pagine per numero di revert
 # le revisioni che sono revert
-df = df.filter([3,4,7,25,34,64,67], axis = 1) 
-df.columns = ['timestamp','commento', 'utente','pagina' , 'edit_count','reverted', 'reverta' ]
-df_by_page = df.groupby(['pagina']).count().sort_values(by=['utente'], ascending=False)
+
+# %%
+
+
+def complex_chains(page):
+    open_chains = []
+    complete_chains = []
+
+    dump_in = bz2.open(dataset, 'r')
+    line = dump_in.readline()
+
+    inizio = datetime.now()
+    i = 0
+
+    while line != '':
+        
+        i+=1
+        if i%10000 == 0:
+            print(datetime.now()-inizio)
+            
+
+        line = dump_in.readline().rstrip().decode('utf-8')[:-1]
+        values = line.split('\t')
+
+        if line == '':
+            continue
+
+        page_name = values[25]
+        rev_id = values[52]
+        reverter = values[65]
+        is_reverted = values[64]
+        added = False
+
+    
+        
+        #check if this revision is part of a chain
+        if page_name == page:
+            for chain in open_chains:
+                if chain[-1] == rev_id:
+                    added = True
+                    if is_reverted == 'true':
+                        chain.append(reverter) 
+                    else:# catena finita 
+                        if(len(chain) > 1):
+                            complete_chains.append(chain)
+                        open_chains.remove(chain) # controllare non si rompa
+                        
+            if not added:
+                
+                open_chains.append([reverter])
+        
+    return complete_chains
+        
+        
+        
+chains = complex_chains('Governo_Conte_II')
+
+
+
+# %%
+
+
+
 # %%

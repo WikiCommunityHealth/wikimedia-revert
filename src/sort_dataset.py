@@ -1,4 +1,4 @@
-#%%
+
 import bz2
 import subprocess
 import os
@@ -6,8 +6,10 @@ from datetime import datetime
 
 inizio = datetime.now()
 
-dataset_path = '/Users/alessiogandelli/wikipedia/lombardo.tsv.bz2';
-input_file = "./data/revisions.tsv"
+dataset_path = '/home/gandelli/dev/venv/dataset/provaIt.tsv.bz2';
+input_file = '/home/gandelli/dev/venv/dataset/revisions.tsv';
+
+sort_script = '/home/gandelli/dev/venv/wikimedia-revert/src/sort.sh';
 
 output = open(input_file, "w")
 dump_in = bz2.open(dataset_path, 'r')
@@ -34,10 +36,10 @@ output.close()
 dump_in.close()
 
 print('finito di filtrare ora inizio a sortare ', datetime.now()-inizio)
-subprocess.call('./src/sort.sh')
+subprocess.call(sort_script)
 print('sorted in ', datetime.now()-inizio)
 
 
 os.remove(input_file)
 
-# %%
+
