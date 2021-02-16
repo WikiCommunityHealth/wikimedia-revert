@@ -101,7 +101,7 @@ chains = complex_chains('Governo_Conte_II')
 
 # %%
 
-def simple_chains(page):
+def simple_chains():
 
     dump_in = bz2.open(dataset, 'r')
     line = dump_in.readline()
@@ -111,9 +111,10 @@ def simple_chains(page):
     reverter_id = 0
     chains = []
     chain = []
-
+    page = ''
+    page_chains = {}
     while line != '':
-        
+       
         i+=1
         if i%10000 == 0:
             print(datetime.now()-inizio)
@@ -142,9 +143,19 @@ def simple_chains(page):
 
             if is_reverted == 'true':
                 reverter_id = reverter # save the value fot the next loop
+        else:
+            
+            if(len(chains) > 0):
+                page_chains[page] = chains
+            page = page_name    
+            chains = [] 
 
-    return chains
+    return page_chains
 
-chains = simple_chains('Roma')
+chains = simple_chains()
+
+sorted(chains, key=lambda k: len(chains[k]), reverse=True)
+
+#salvare in ram il dizionario  potrebbe dare problemi 
 
 # %%
