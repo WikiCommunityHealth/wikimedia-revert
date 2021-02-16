@@ -101,6 +101,50 @@ chains = complex_chains('Governo_Conte_II')
 
 # %%
 
+def simple_chains(page):
 
+    dump_in = bz2.open(dataset, 'r')
+    line = dump_in.readline()
+    inizio = datetime.now()
+    i = 0
+
+    reverter_id = 0
+    chains = []
+    chain = []
+
+    while line != '':
+        
+        i+=1
+        if i%10000 == 0:
+            print(datetime.now()-inizio)
+
+        
+        line = dump_in.readline().rstrip().decode('utf-8')[:-1]
+        values = line.split('\t')
+
+        if line == '':
+            continue
+
+        page_name = values[25]
+        rev_id = values[52]
+        reverter = values[65]
+        is_reverted = values[64]
+
+        if page_name == page:
+
+            if rev_id == reverter_id:
+                chain.append(rev_id)
+            else:
+                if len(chain) > 1:
+                    chains.append(chain)
+                chain = []
+
+
+            if is_reverted == 'true':
+                reverter_id = reverter # save the value fot the next loop
+
+    return chains
+
+chains = simple_chains('Roma')
 
 # %%
