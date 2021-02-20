@@ -9,7 +9,7 @@ inizio = datetime.now()
 dataset_folder = '/home/gandelli/dev/venv/dataset/italian/';
 output_file = '/home/gandelli/dev/venv/dataset/revisions.tsv';
 
-sort_script = '/home/gandelli/dev/venv/wikimedia-revert/src/sort.sh';
+sort_script = '/home/gandelli/dev/venv/wikimedia-revert/src/bash/sort.sh';
 
 output = open(output_file, "w")
 
