@@ -3,7 +3,8 @@ import bz2
 import pandas as pd
 from datetime import datetime
 
-dataset = '/home/gandelli/dev/venv/dataset/sorted.tsv.bz2'
+#dataset = '/home/gandelli/dev/venv/dataset/italian/filtered_sorted_it.tsv.bz2'
+dataset = '/home/gandelli/dev/venv/dataset/provaIt/sorted.tsv.bz2'
 
 
 #l'ultima colonna è fals invece che false 
@@ -72,30 +73,37 @@ def complex_chains(page):
         reverter = values[65]
         is_reverted = values[64]
         added = False
+        exist = False
 
     
         
         #check if this revision is part of a chain
         if page_name == page:
-            for chain in open_chains:
-                if chain[-1] == rev_id:
+            for chain in open_chains: 
+
+                for i in range(len(chain)):
+                    if chain[i] == reverter:
+                        exist = True
+
+                if chain[-1] == rev_id:                                 # if the last element of the chain match with the current revision id
                     added = True
-                    if is_reverted == 'true':
+                    if is_reverted == 'true' and not exist:                           # continue the chain
                         chain.append(reverter) 
-                    else:# catena finita 
-                        if(len(chain) > 1):
+                    else:                                               # end of the chain this revision is not reverted 
+                        if len(chain) > 1 :
                             complete_chains.append(chain)
-                        open_chains.remove(chain) # controllare non si rompa
-                        
-            if not added:
-                
+                        open_chains.remove(chain)                       
+           
+
+            if not added and not exist:
+                print(' creo una nuova catena ', reverter)
                 open_chains.append([reverter])
         
     return complete_chains
         
         
         
-chains = complex_chains('Governo_Conte_II')
+c_chains = complex_chains('Governo_Conte_II')
 
 
 
@@ -116,7 +124,7 @@ def simple_chains():
     while line != '':
        
         i+=1
-        if i%10000 == 0:
+        if i%100000 == 0:
             print(datetime.now()-inizio)
 
         
@@ -152,9 +160,9 @@ def simple_chains():
 
     return page_chains
 
-chains = simple_chains()
+s_chains = simple_chains()
 
-sorted(chains, key=lambda k: len(chains[k]), reverse=True)
+sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
 
 #salvare in ram il dizionario  potrebbe dare problemi 
 
