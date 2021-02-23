@@ -6,10 +6,10 @@ from datetime import datetime
 
 inizio = datetime.now()
 
-dataset_folder = '/home/gandelli/dev/venv/dataset/italian/';
-output_file = '/home/gandelli/dev/venv/dataset/revisions.tsv';
+dataset_folder = '/home/gandelli/dev/data/it/';
+output_file = '/home/gandelli/dev/data/revisions.tsv';
 
-sort_script = '/home/gandelli/dev/venv/wikimedia-revert/src/bash/sort.sh';
+sort_script = '/home/gandelli/dev/wikimedia-revert/src/bash/sort.sh';
 
 output = open(output_file, "w")
 
@@ -42,6 +42,6 @@ print('finito di filtrare ora inizio a sortare ', datetime.now()-inizio)
 subprocess.call(sort_script)
 print('sorted in ', datetime.now()-inizio)
 
-os.remove(output_file)
+#os.remove(output_file)
 
 
