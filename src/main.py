@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 
 dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
-#dataset = '/home/gandelli/dev/data/it/conte20.tsv'
+#dataset = '/home/gandelli/dev/data/toscana.tsv'
 
 #l'ultima colonna è fals invece che false 
 
@@ -12,27 +12,30 @@ dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
 
 #%% functions 
 
-def complex_chains(page):
+def complex_chains():
     open_chains = []
     complete_chains = []
 
-    #dump_in = bz2.open(dataset, 'r')
-    dump_in = open(dataset, 'r')
+    dump_in = bz2.open(dataset, 'r') 
+    #dump_in = open(dataset, 'r')# for uncompressed 
     line = dump_in.readline()
 
     inizio = datetime.now()
     i = 0
 
+
+    page = ''
+    page_chains = {}
+
     while line != '':
         
         i+=1
-        if i%10000 == 0:
-            print(datetime.now()-inizio)
+        if i%100000 == 0:
+            print(i, datetime.now()-inizio)
             
 
-        #line = dump_in.readline().rstrip().decode('utf-8')[:-1]
-        line = dump_in.readline().rstrip()[:-1]
-
+        line = dump_in.readline().rstrip().decode('utf-8')[:-1] 
+        #line = dump_in.readline().rstrip()[:-1]# for uncompressed 
         values = line.split('\t')
 
         if line == '':
@@ -41,22 +44,26 @@ def complex_chains(page):
         if len(values) < 69:
             continue
 
-        
-        
+       
+ 
+
+        if values[28] != '0':
+           continue
+
+
         page_name = values[25]
         rev_id = values[52]
         reverter = values[65]
         is_reverted = values[64]
+
         added = False
         exist = False
 
-    
-        
         #check if this revision is part of a chain
         if page_name == page:
-            for chain in open_chains: 
+            for chain in open_chains:                                   #check if this rev is part of an existing  chain
 
-                for i in range(len(chain)):
+                for i in range(len(chain)):                             # if the one you want to insert already exists don't add it 
                     if chain[i] == reverter:
                         exist = True
 
@@ -65,16 +72,23 @@ def complex_chains(page):
                     if is_reverted == 'true' and not exist:                           # continue the chain
                         chain.append(reverter) 
                     else:                                               # end of the chain this revision is not reverted 
-                        if len(chain) > 1 :
+                        if len(chain) > 2 :
                             complete_chains.append(chain)
                         open_chains.remove(chain)                       
            
 
             if not added and not exist:
-                print('new catena', reverter)
-                open_chains.append([reverter])
+                
+                open_chains.append([rev_id, reverter])
         
-    return complete_chains
+        else:
+            if(len(complete_chains) > 0):
+                page_chains[page] = complete_chains
+            page = page_name
+            complete_chains = []
+            open_chains = []
+        
+    return page_chains
 
 def simple_chains():
 
@@ -104,21 +118,19 @@ def simple_chains():
         if line == '':
             continue
         
-        
-        
-        page_name = values[25]
-        rev_id = values[52]
-        reverter = values[65]
+        page_name   = values[25]
+        rev_id      = values[52]
+        reverter    = values[65]
         is_reverted = values[64]
 
-        if page_name == page:
+        if page_name == page:   
 
-            if rev_id == reverter_id:
-                chain.append(rev_id)
+            if rev_id == reverter_id:                                   #if the currect reverts the previous one
+                chain.append(rev_id)                                    # continue the chain
             else:
-                if len(chain) > 1:
+                if len(chain) > 2:
                     chains.append(chain)
-                chain = []
+                chain = [rev_id]
 
 
             if is_reverted == 'true':
@@ -150,10 +162,10 @@ def get_DataFrame():
 
 #%% sort pages by revert number
 
-df = get_DataFrame()    
-df = df.filter([3,4,7,25,34,64,67], axis = 1) 
-df.columns = ['timestamp','commento', 'utente','pagina' , 'edit_count','reverted', 'reverta' ]
-df_by_page = df.groupby(['pagina']).count().sort_values(by=['utente'], ascending=False)
+#df = get_DataFrame()    
+#df = df.filter([3,4,7,25,34,64,67], axis = 1) 
+#df.columns = ['timestamp','commento', 'utente','pagina' , 'edit_count','reverted', 'reverta' ]
+#df_by_page = df.groupby(['pagina']).count().sort_values(by=['utente'], ascending=False)
 #%%
 
 #dovrebbe ordinare le pagine per numero di revert
@@ -161,8 +173,8 @@ df_by_page = df.groupby(['pagina']).count().sort_values(by=['utente'], ascending
 
 # %%
  
-conte_chains = complex_chains('Governo_Conte_II')
-
+c_chains_all = complex_chains()
+sorted(c_chains_all, key=lambda k: len(c_chains_all[k]), reverse=True)
 
 
 # %%
@@ -171,5 +183,12 @@ s_chains = simple_chains()
 sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
 
 
+
+# %% 
+
+
+
+
+# %%
 
 # %%
