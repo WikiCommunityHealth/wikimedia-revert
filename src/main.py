@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 
 dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
-#dataset = '/home/gandelli/dev/data/toscana.tsv'
+dataset = '/home/gandelli/dev/data/test/toscana_sorted.tsv'
 
 #l'ultima colonna è fals invece che false 
 
@@ -13,44 +13,31 @@ dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
 #%% functions 
 
 def complex_chains():
-    open_chains = []
-    complete_chains = []
+    
 
     dump_in = bz2.open(dataset, 'r') 
     #dump_in = open(dataset, 'r')# for uncompressed 
     line = dump_in.readline()
 
     inizio = datetime.now()
-    i = 0
 
-
+    open_chains = []
+    complete_chains = []
+    users = []
     page = ''
     page_chains = {}
 
+
     while line != '':
         
-        i+=1
-        if i%100000 == 0:
-            print(i, datetime.now()-inizio)
-            
-
         line = dump_in.readline().rstrip().decode('utf-8')[:-1] 
         #line = dump_in.readline().rstrip()[:-1]# for uncompressed 
         values = line.split('\t')
 
-        if line == '':
+        if line == '' or len(values) < 69 or values[28] != '0':
             continue
 
-        if len(values) < 69:
-            continue
-
-       
  
-
-        if values[28] != '0':
-           continue
-
-
         page_name = values[25]
         rev_id = values[52]
         reverter = values[65]
@@ -172,10 +159,13 @@ def get_DataFrame():
 # le revisioni che sono revert
 
 # %%
- 
-c_chains_all = complex_chains()
-sorted(c_chains_all, key=lambda k: len(c_chains_all[k]), reverse=True)
-
+inizio = datetime.now()
+c_chains = complex_chains()
+sorted(c_chains, key=lambda k: len(c_chains[k]), reverse=True)
+print(datetime.now() -inizio)
+c_chains2 = complex_chains2()
+sorted(c_chains2, key=lambda k: len(c_chains2[k]), reverse=True)
+print(datetime.now() -inizio)
 
 # %%
 
@@ -189,6 +179,96 @@ sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
 
 
 
+# %%
+
+# %%
+
+
+
+
+
+
+
+
+
+
+#%% non so perchè ma non funziona o  forse noon funziona l'altro 
+def complex_chains2():
+    
+
+    dump_in = bz2.open(dataset, 'r') 
+    #dump_in = open(dataset, 'r')# for uncompressed 
+    line = dump_in.readline()
+
+    inizio = datetime.now()
+
+    open_chains = []
+    complete_chains = []
+    page = ''
+    page_chains = {}
+
+
+    while line != '':
+        
+        line = dump_in.readline().rstrip().decode('utf-8')[:-1] 
+        #line = dump_in.readline().rstrip()[:-1]# for uncompressed 
+        values = line.split('\t')
+
+        if line == '' or len(values) < 69 or values[28] != '0':
+            continue
+
+ 
+        page_name = values[25]
+    
+        #check if this revision is part of a chain
+        if page_name == page:
+            continue_page(open_chains, complete_chains, values)
+
+        else:
+            new_page(open_chains, complete_chains, page_chains, page)
+            page = page_name
+        
+    return page_chains
+
+
+def continue_page(open_chains, complete_chains, values):
+
+    rev_id = values[52]
+    reverter = values[65]
+    is_reverted = values[64]
+
+
+    added = False
+    exist = False
+
+    for chain in open_chains:                                   #check if this rev is part of an existing  chain
+
+        for i in range(len(chain)):                             # if the one you want to insert already exists don't add it 
+            if chain[i] == reverter:
+                exist = True
+
+        if chain[-1] == rev_id:                                 # if the last element of the chain match with the current revision id
+            added = True
+            if is_reverted == 'true' and not exist:                           # continue the chain
+                chain.append(reverter) 
+            else:                                               # end of the chain this revision is not reverted 
+                if len(chain) > 2 :
+                    complete_chains.append(chain)
+                open_chains.remove(chain)                       
+    
+
+    if not added and not exist:
+        
+        open_chains.append([rev_id, reverter])
+
+
+
+def new_page(complete_chains, open_chains, page_chains, page):
+    if(len(complete_chains) > 0):
+        page_chains[page] = complete_chains
+       
+    complete_chains = []
+    open_chains = []
 # %%
 
 # %%

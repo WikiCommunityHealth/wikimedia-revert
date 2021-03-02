@@ -6,5 +6,5 @@ guardare hash
 
 paper yasseri
 togliere vandalismo 
-filtrare per namespace
+filtrare per namespace  ok
 n utenti catena mutua
