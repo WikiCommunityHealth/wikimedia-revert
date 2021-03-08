@@ -2,8 +2,9 @@
 import bz2
 import pandas as pd
 from datetime import datetime
+import json
 
-dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
+#dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
 dataset = '/home/gandelli/dev/data/test/toscana_sorted.tsv'
 
 #l'ultima colonna è fals invece che false 
@@ -15,9 +16,12 @@ dataset = '/home/gandelli/dev/data/test/toscana_sorted.tsv'
 def complex_chains():
     
 
-    dump_in = bz2.open(dataset, 'r') 
-    #dump_in = open(dataset, 'r')# for uncompressed 
+    #dump_in = bz2.open(dataset, 'r') 
+    dump_in = open(dataset, 'r')# for uncompressed 
+    dump_out = open('wars.json', 'w')
     line = dump_in.readline()
+
+    dump_out.write('[')
 
     inizio = datetime.now()
 
@@ -27,21 +31,35 @@ def complex_chains():
     page = ''
     page_chains = {}
 
+    war = {
+        "page": 'titolo',
+        "chains": []
+
+    }
+
+    catena = {
+        "users": ['pippo', 'pluto'],
+        "revisions": []
+    }
 
     while line != '':
         
-        line = dump_in.readline().rstrip().decode('utf-8')[:-1] 
-        #line = dump_in.readline().rstrip()[:-1]# for uncompressed 
+        #line = dump_in.readline().rstrip().decode('utf-8')[:-1] 
+        line = dump_in.readline().rstrip()[:-1]# for uncompressed 
         values = line.split('\t')
 
         if line == '' or len(values) < 69 or values[28] != '0':
             continue
-
+        
+        
  
         page_name = values[25]
         rev_id = values[52]
         reverter = values[65]
         is_reverted = values[64]
+        utente = values[7]
+
+        utenti = []
 
         added = False
         exist = False
@@ -57,9 +75,14 @@ def complex_chains():
                 if chain[-1] == rev_id:                                 # if the last element of the chain match with the current revision id
                     added = True
                     if is_reverted == 'true' and not exist:                           # continue the chain
-                        chain.append(reverter) 
+                        chain.append(reverter)
+                        utenti.append(utente)
+                         
                     else:                                               # end of the chain this revision is not reverted 
                         if len(chain) > 2 :
+                            catena['revisions'] = chain
+                            catena['users'] = utenti
+                            war['chains'].append(catena)
                             complete_chains.append(chain)
                         open_chains.remove(chain)                       
            
@@ -71,65 +94,98 @@ def complex_chains():
         else:
             if(len(complete_chains) > 0):
                 page_chains[page] = complete_chains
+                war['page'] = page
+                
+                dump_out.write(json.dumps(war))
+                dump_out.write(',\n')
             page = page_name
             complete_chains = []
             open_chains = []
-        
+    
+    dump_out.write(']')
     return page_chains
+
+#complex_chains()
 
 def simple_chains():
 
     
-    dump_in = bz2.open(dataset, 'r')
+    #dump_in = bz2.open(dataset, 'r')
+    dump_in = open(dataset, 'r')# for uncompressed 
+
     
 
     line = dump_in.readline()
+    
     inizio = datetime.now()
     i = 0
 
     reverter_id = 0
     chains = []
     chain = []
-    page = ''
+    current_page = ''
     page_chains = {}
+    users = set()
+    
     while line != '':
-       
-        i+=1
-        if i%100000 == 0:
-            print(datetime.now()-inizio)
 
         
-        line = dump_in.readline().rstrip().decode('utf-8')[:-1]
+        #line = dump_in.readline().rstrip().decode('utf-8')[:-1]
+        line = dump_in.readline().rstrip()[:-1]# for uncompressed 
+
         values = line.split('\t')
 
-        if line == '':
+        if line == '' or values[28] != '0' or is_vandalism(values[4]): # i want only namespace 0 and no vandalism
             continue
+
+        
         
         page_name   = values[25]
         rev_id      = values[52]
         reverter    = values[65]
         is_reverted = values[64]
+        user        = values[7]
 
-        if page_name == page:   
+        if page_name != current_page:   
+            if(len(chains) > 0):
+                savePage(current_page, chains)
+                page_chains[current_page] = chains
+            current_page = page_name    
+            chains = [] 
+           
+             
+        else:
 
             if rev_id == reverter_id:                                   #if the currect reverts the previous one
-                chain.append(rev_id)                                    # continue the chain
+                chain.append(rev_id)     
+                users.add(user)                               # continue the chain
             else:
                 if len(chain) > 2:
-                    chains.append(chain)
+                    chains.append({'revisions':chain, 'users' : users})
                 chain = [rev_id]
-
+                users = set()
+                
 
             if is_reverted == 'true':
-                reverter_id = reverter # save the value fot the next loop
-        else:
+                reverter_id = reverter # save
             
-            if(len(chains) > 0):
-                page_chains[page] = chains
-            page = page_name    
-            chains = [] 
 
     return page_chains
+
+import re
+
+
+
+def is_vandalism(comment):
+    words = re.compile('vandal')
+    if words.search(comment): 
+        return True
+    else:
+        return False
+
+
+def savePage(title, chains):
+    pass
 
 def get_DataFrame():
 
@@ -163,6 +219,9 @@ inizio = datetime.now()
 c_chains = complex_chains()
 sorted(c_chains, key=lambda k: len(c_chains[k]), reverse=True)
 print(datetime.now() -inizio)
+
+
+#%%
 c_chains2 = complex_chains2()
 sorted(c_chains2, key=lambda k: len(c_chains2[k]), reverse=True)
 print(datetime.now() -inizio)
