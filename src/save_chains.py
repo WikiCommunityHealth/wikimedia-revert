@@ -133,16 +133,10 @@ sorted(cc, key=lambda k: len(cc[k]), reverse=True)
 
 def simple_chains():
 
-    
     #dump_in = bz2.open(dataset, 'r')
     dump_in = open(dataset, 'r')# for uncompressed 
-
-    
-
     line = dump_in.readline()
     
-    inizio = datetime.now()
-    i = 0
 
     reverter_id = 0
     chains = []
@@ -156,7 +150,6 @@ def simple_chains():
         
         #line = dump_in.readline().rstrip().decode('utf-8')[:-1]
         line = dump_in.readline().rstrip()[:-1]# for uncompressed 
-
         values = line.split('\t')
 
         if line == '' or values[28] != '0' or is_vandalism(values[4]): # i want only namespace 0 and no vandalism
@@ -170,7 +163,7 @@ def simple_chains():
         is_reverted = values[64]
         user        = values[7]
 
-        if page_name != current_page:   
+        if page_name != current_page:                           #
             if(len(chains) > 0):
                 savePage(current_page, chains)
                 page_chains[current_page] = chains

@@ -4,10 +4,11 @@ import pandas as pd
 from datetime import datetime
 import json
 import re
+import os
 
 #dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
 dataset = '/home/gandelli/dev/data/test/toscana_sorted.tsv'
-output = '/home/gandelli/dev/data/test/wars.json'
+output = '/home/gandelli/dev/data/wars/'
 
 
 #l'ultima colonna è fals invece che false 
@@ -108,18 +109,13 @@ def complex_chains():
     dump_out.write(']')
     return page_chains
 
-#complex_chains()
 def simple_chains():
 
     
     #dump_in = bz2.open(dataset, 'r')
     dump_in = open(dataset, 'r')# for uncompressed 
-    
-    
-
     line = dump_in.readline()
     
-    inizio = datetime.now()
     i = 0
 
     reverter_id = 0
@@ -131,10 +127,8 @@ def simple_chains():
     
     while line != '':
 
-        
         #line = dump_in.readline().rstrip().decode('utf-8')[:-1]
         line = dump_in.readline().rstrip()[:-1]# for uncompressed 
-
         values = line.split('\t')
 
         if line == '' or values[28] != '0' or is_vandalism(values[4]): # i want only namespace 0 and no vandalism
@@ -147,17 +141,19 @@ def simple_chains():
         reverter    = values[65]
         is_reverted = values[64]
         user        = values[7]
+        page_id     = int(values[23])
 
-        if page_name != current_page:   
+        if page_name != current_page:                       #process new page 
+            
             if(len(chains) > 0):
-                savePage(current_page, chains)
+                savePage(current_page, chains, page_id)
                 page_chains[current_page] = chains
+                i+=1
+
             current_page = page_name    
             chains = [] 
-           
              
         else:
-
             if rev_id == reverter_id:                                   #if the currect reverts the previous one
                 chain.append(rev_id)     
                 users.add(user)                               # continue the chain
@@ -171,11 +167,8 @@ def simple_chains():
             if is_reverted == 'true':
                 reverter_id = reverter # save
             
-
+    finish_files()
     return page_chains
-
-
-
 
 def is_vandalism(comment):
     words = re.compile('vandal')
@@ -184,11 +177,24 @@ def is_vandalism(comment):
     else:
         return False
 
+def savePage(title, chains, id):
+    path = f"{output}wars_{id%4}.json"
+    dump_out = open(path, 'a')
 
-def savePage(title, chains):
-    dump_out = open(output, 'a')
-    dump_out.write(json.dumps({'title': title, 'chains': chains},))
+    filesize = os.path.getsize(path)
+    if filesize == 0:
+        dump_out.write('[')
+
+    
+    dump_out.write(json.dumps({'title': title, 'chains': chains})+',')
     dump_out.close()
+
+
+def finish_files():
+    for filename in os.listdir(output):
+        print(filename)
+        dump_out = open(output+filename, 'a')
+        dump_out.write('{}]') # andrebbe cancellata la virgola, uso questo trick per farlo sintatticamente corretto
 
 def get_DataFrame():
 
@@ -206,36 +212,35 @@ def get_DataFrame():
 
     return pd.DataFrame(df)
 
-#%% sort pages by revert number
 
-df = get_DataFrame()    
-df = df.filter([3,4,7,25,34,64,67], axis = 1) 
-df.columns = ['timestamp','commento', 'utente','pagina' , 'edit_count','reverted', 'reverta' ]
-df_by_page = df.groupby(['pagina']).count().sort_values(by=['utente'], ascending=False)
 #%%
 
-# %%
+
+
+
+# %% COMPLEX 
 inizio = datetime.now()
 c_chains = complex_chains()
 sorted(c_chains, key=lambda k: len(c_chains[k]), reverse=True)
 print(datetime.now() -inizio)
 
 
-#%%
-c_chains2 = complex_chains2()
-sorted(c_chains2, key=lambda k: len(c_chains2[k]), reverse=True)
-print(datetime.now() -inizio)
 
-# %%
+
+# %% SIMPLE
 
 s_chains = simple_chains()
 sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
 
 
 
-# %% 
 
+#%% sort pages by revert number
 
+df = get_DataFrame()    
+df = df.filter([3,4,7,25,34,64,67], axis = 1) 
+df.columns = ['timestamp','commento', 'utente','pagina' , 'edit_count','reverted', 'reverta' ]
+df_by_page = df.groupby(['pagina']).count().sort_values(by=['utente'], ascending=False)
 
 
 # %%
