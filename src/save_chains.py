@@ -6,6 +6,7 @@ import json
 
 #dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
 dataset = '/home/gandelli/dev/data/test/magalli.tsv'
+output = '/home/gandelli/dev/data/test/wars.json'
 
 def complex_chains():
     
@@ -115,18 +116,19 @@ def complex_chains():
 
     return page_chains
 
-
-
-
 def is_rev_in_chain(reverter, chain):
      for i in range(len(chain)):                             # if the one you want to insert already exists don't add it 
         if chain[i] == reverter:
             return True
      return False                   
 # %%
+
 cc = complex_chains()
 sorted(cc, key=lambda k: len(cc[k]), reverse=True)
 # %%
+
+
+
 
 
 def simple_chains():
@@ -183,9 +185,9 @@ def simple_chains():
                 users.add(user)                               # continue the chain
             else:
                 if len(chain) > 2:
-                    chains.append({'revisions':chain, 'users' : users})
+                    chains.append({'revisions':chain, 'users' : list(users)})
                 chain = [rev_id]
-                users = set()
+                users = {user}
                 
 
             if is_reverted == 'true':
@@ -206,6 +208,10 @@ def is_vandalism(comment):
         return False
 
 def savePage(title, chains):
-    
+    dump_out = open(output, 'w')
+    dump_out.write(json.dumps({'title': title, 'chains': chains}))
+    dump_out.close()
+
+simple_chains()
 
 # %%
