@@ -10,3 +10,4 @@ D reverts C
 E reverts B
 F reverts A
 
+simplechain approssimano ma abbastanza affidabili

@@ -16,4 +16,4 @@ o smontatocomplexchain e le cose sono cambiate
 
 identificare vandalismo guardado il commento
 
-metriche a se per i bot 
+metriche a se per i bot h
