@@ -15,11 +15,15 @@ output = open(output_file, "w")
 line = dump_in.readline()
 
 page_id = '2039135'
-page_name = 'Night_of_the_Speed_Demons'
+page_name = 'Pino_Rauti'
+stop = 'Ninetales'
+
 
 massimo = 0 
 minimo = 100000000
 pagine = set()
+
+stampa = False
   
 while line != '':
     line = dump_in.readline().rstrip().decode('utf-8')[:-1]
@@ -35,7 +39,6 @@ while line != '':
     minimo = min(minimo, int(values[23]))
    
     if values[25] == page_name:
-        print(line)
         output.write(line + '\n')
 
 dump_in.close()

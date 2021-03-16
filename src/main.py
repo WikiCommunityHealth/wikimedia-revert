@@ -7,8 +7,11 @@ import re
 import os
 
 dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
-#dataset = '/home/gandelli/dev/data/test/toscana_sorted.tsv'
+#dataset = '/home/gandelli/dev/data/test/paradise.tsv'
 output = '/home/gandelli/dev/data/wars/'
+out_pages = '/home/gandelli/dev/data/pages.txt'
+#out_pages_chains = '/home/gandelli/dev/data/pages_chains.txt'
+
 
 
 #l'ultima colonna è fals invece che false 
@@ -115,19 +118,23 @@ def simple_chains():
     dump_in = bz2.open(dataset, 'r')
     #dump_in = open(dataset, 'r')# for uncompressed 
     line = dump_in.readline()
+
+    save_pages = open(out_pages, 'w')
+    #pages_chains = open(out_pages_chains, 'w')
     
     i = 0
 
-    reverter_id = 0
     chains = []
     chain = []
-    current_page = ''
+    
     page_chains = {}
     stats = {}
-    users = set()
+    users = {}
     total_reverts = 0
     longest_chain = 0
-    
+    reverter_id = 0
+    current_page = ''
+
     while line != '':
 
         line = dump_in.readline().rstrip().decode('utf-8')[:-1]
@@ -137,45 +144,57 @@ def simple_chains():
         if line == '' or values[28] != '0' or is_vandalism(values[4]): # i want only namespace 0 and no vandalism
             continue
 
-        
-        
+    
         page_name   = values[25]
         rev_id      = values[52]
         reverter    = values[65]
         is_reverted = values[64]
         user        = values[7]
         page_id     = int(values[23])
+        user_rev_count = values[21]
 
-        if page_name != current_page:                       #process new page 
-            
-            if(len(chains) > 0):
-                savePage(current_page, chains, page_id, total_reverts/len(chains), longest_chain)
+        #process new page
+        if page_name != current_page:                        
+            chains.append({'revisions':chain, 'users' : users})
+            if(len(chains) > 0): 
+               
+               # savePage(current_page, chains, page_id, total_reverts/len(chains), longest_chain)
                 page_chains[current_page] = chains
                 stats[current_page] = (total_reverts/len(chains) , longest_chain)
-                #print(current_page, total_reverts/len(chains), longest_chain)
+                save_pages.write(current_page + '\n')
+                m = getM()
                 i+=1
 
             current_page = page_name    
             chains = [] 
             total_reverts = 0
             longest_chain = 0
+            chain = [rev_id]
+            users = {}
+            users[user] = user_rev_count
              
         else:
+            #continue the chain
             if rev_id == reverter_id:                                   #if the currect reverts the previous one
                 chain.append(rev_id)     
-                users.add(user)                               # continue the chain
-            else:
+                users[user] = user_rev_count                               
+            #finish the chain
+            else: 
                 if len(chain) > 2:
-                    chains.append({'revisions':chain, 'users' : list(users)})
+                    
+                    chains.append({'revisions':chain, 'users' : users})
                     total_reverts += len(chain)
                     longest_chain = max(longest_chain, len(chain))
+                
                 chain = [rev_id]
-                users = {user}
+                users = {}
+                users[user] = user_rev_count
                 
 
             if is_reverted == 'true':
                 reverter_id = reverter # save
             
+    #pages_chains.write(list(page_chains))
     finish_files()
     return (page_chains,stats)
 
@@ -187,17 +206,19 @@ def is_vandalism(comment):
         return False
 
 def savePage(title, chains, id, weight, longest):
-    path = f"{output}wars_{id%4}.json"
+    print('salvo la pagina', title)
+    n_files = 10
+    path = f"{output}wars_{ id % n_files}.json"
     dump_out = open(path, 'a')
 
     filesize = os.path.getsize(path)
     if filesize == 0:
         dump_out.write('[')
 
-    
-    dump_out.write(json.dumps({'title': title, 'chains': chains, 'mean': weight, 'longest': longest})+',')
-    dump_out.close()
+                        
 
+    dump_out.write(json.dumps({'title': title, 'chains': chains, 'mean': weight, 'longest': longest})+',\n')
+    dump_out.close()
 
 def finish_files():
     for filename in os.listdir(output):
@@ -221,18 +242,8 @@ def get_DataFrame():
 
     return pd.DataFrame(df)
 
-
-#%%
-
-
-
-
-# %% COMPLEX 
-inizio = datetime.now()
-c_chains = complex_chains()
-sorted(c_chains, key=lambda k: len(c_chains[k]), reverse=True)
-print(datetime.now() -inizio)
-
+def getM(chains):
+    
 
 
 
@@ -242,6 +253,14 @@ s_chains, stats = simple_chains()
 sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
 sorted(stats.items(), key=lambda k: k[1][1], reverse = True) # catena piu lunga
 sorted(stats.items(), key=lambda k: k[1][0], reverse = True) # media
+print(datetime.now() -inizio)
+
+
+
+# %% COMPLEX 
+inizio = datetime.now()
+c_chains = complex_chains()
+sorted(c_chains, key=lambda k: len(c_chains[k]), reverse=True)
 print(datetime.now() -inizio)
 
 
