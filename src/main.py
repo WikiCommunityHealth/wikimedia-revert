@@ -154,15 +154,16 @@ def simple_chains():
         user_rev_count = values[21]
 
         #process new page
-        if page_name != current_page:                        
-            chains.append({'revisions':chain, 'users' : users})
+        if page_name != current_page:
+            if len(chain) > 2 and len(users) > 1:                        
+                chains.append({'revisions':chain, 'users' : users})
             if(len(chains) > 0): 
-               
-               # savePage(current_page, chains, page_id, total_reverts/len(chains), longest_chain)
+                m = getM(chains)
+                savePage(current_page, chains, page_id, total_reverts, longest_chain, m)
                 page_chains[current_page] = chains
-                stats[current_page] = (total_reverts/len(chains) , longest_chain)
+                stats[current_page] = (total_reverts/len(chains) , longest_chain, m)
                 save_pages.write(current_page + '\n')
-                m = getM()
+                
                 i+=1
 
             current_page = page_name    
@@ -180,7 +181,7 @@ def simple_chains():
                 users[user] = user_rev_count                               
             #finish the chain
             else: 
-                if len(chain) > 2:
+                if len(chain) > 2 and len(users) > 1:
                     
                     chains.append({'revisions':chain, 'users' : users})
                     total_reverts += len(chain)
@@ -205,8 +206,8 @@ def is_vandalism(comment):
     else:
         return False
 
-def savePage(title, chains, id, weight, longest):
-    print('salvo la pagina', title)
+def savePage(title, chains, id, total_reverts, longest, m):
+    #print('salvo la pagina', title)
     n_files = 10
     path = f"{output}wars_{ id % n_files}.json"
     dump_out = open(path, 'a')
@@ -215,9 +216,9 @@ def savePage(title, chains, id, weight, longest):
     if filesize == 0:
         dump_out.write('[')
 
-                        
+    weight = total_reverts/len(chains)
 
-    dump_out.write(json.dumps({'title': title, 'chains': chains, 'mean': weight, 'longest': longest})+',\n')
+    dump_out.write(json.dumps({'title': title, 'chains': chains,'n_reverts': total_reverts,'mean': weight, 'longest': longest, 'M' : m})+',\n')
     dump_out.close()
 
 def finish_files():
@@ -243,7 +244,20 @@ def get_DataFrame():
     return pd.DataFrame(df)
 
 def getM(chains):
+    tot = 0
+    utenti = set()
+    for chain in chains:
+        a = 9999999999
     
+        for user in chain['users']:
+            utenti.add(user)
+            if chain['users'][user] != '':
+                a =  min(a, int(chain['users'][user])) # for every chain in a page i take the users involved and i extract the minimun revision count
+            else:
+                a = min(a, 0)
+        tot += a
+
+    return (tot * len(utenti))    
 
 
 
