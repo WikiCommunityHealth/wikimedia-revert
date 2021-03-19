@@ -1,4 +1,4 @@
-#%%
+#%% from all the dataset extract the raw rows that respect some conditions
 import bz2
 import subprocess
 import os

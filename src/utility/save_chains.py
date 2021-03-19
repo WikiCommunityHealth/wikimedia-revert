@@ -128,9 +128,6 @@ sorted(cc, key=lambda k: len(cc[k]), reverse=True)
 # %%
 
 
-
-
-
 def simple_chains():
 
     #dump_in = bz2.open(dataset, 'r')

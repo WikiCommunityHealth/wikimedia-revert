@@ -1,4 +1,4 @@
-#%%
+#%% extract just some column never used
 import bz2
 import subprocess
 import os

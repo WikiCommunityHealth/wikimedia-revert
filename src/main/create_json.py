@@ -1,4 +1,4 @@
-# %% intro
+# %% create json contining info about chains 
 import bz2
 import pandas as pd
 import numpy as np
@@ -23,6 +23,7 @@ out_pages = '/home/gandelli/dev/data/pages.txt'
 
 # %% functions
 
+#does not work 
 def complex_chains():
 
     #dump_in = bz2.open(dataset, 'r')
@@ -113,7 +114,7 @@ def complex_chains():
     dump_out.write(']')
     return page_chains
 
-
+#works
 def simple_chains():
 
     dump_in = bz2.open(dataset, 'r')
@@ -144,7 +145,7 @@ def simple_chains():
         values = line.split('\t')
 
         # i want only namespace 0 and no vandalism
-        if line == '' or values[28] != '0' or is_vandalism(values[4]):
+        if line == '' or values[28] != '0' or is_vandalism(values[4], values[11]):
             continue
 
 
@@ -212,14 +213,12 @@ def simple_chains():
     finish_files()
     return (page_chains, stats)
 
-
-def is_vandalism(comment):
+def is_vandalism(comment, role):
     words = re.compile('vandal')
-    if words.search(comment):
+    if words.search(comment) or role == 'bot':
         return True
     else:
         return False
-
 
 def savePage(title, chains, id, total_reverts, longest, m, lunghezze):
     #print('salvo la pagina', title)
@@ -231,7 +230,7 @@ def savePage(title, chains, id, total_reverts, longest, m, lunghezze):
     
     for i in range(1,len(lunghezze)):
         if(lunghezze[i] > 0):
-            lun[i] = lunghezze[i]
+            lun[i] = int(lunghezze[i])
     
     if filesize == 0:
         dump_out.write('[')
@@ -250,22 +249,6 @@ def finish_files():
         # andrebbe cancellata la virgola, uso questo trick per farlo sintatticamente corretto
         dump_out.write('{}]')
 
-
-def get_DataFrame():
-
-    dump_in = bz2.open(dataset, 'r')
-    line = dump_in.readline()
-    df = []
-
-    while line != '':
-
-        line = dump_in.readline().rstrip().decode('utf-8')[:-1]
-        values = line.split('\t')
-
-        df.append(values)
-
-    return pd.DataFrame(df)
-
 def getM(chains):
     tot = 0
     utenti = set()
@@ -282,6 +265,21 @@ def getM(chains):
 
     return (tot * len(utenti))    
 
+def get_DataFrame():
+
+    dump_in = bz2.open(dataset, 'r')
+    line = dump_in.readline()
+    df = []
+
+    while line != '':
+
+        line = dump_in.readline().rstrip().decode('utf-8')[:-1]
+        values = line.split('\t')
+
+        df.append(values)
+
+    return pd.DataFrame(df)
+
 
 
 
@@ -291,6 +289,7 @@ os.mkdir(output)
 inizio = datetime.now()
 s_chains, stats = simple_chains()
 sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
+
 lunga = sorted(stats.items(), key=lambda k: k[1][1], reverse=True)  # catena piu lunga
 media = sorted(stats.items(), key=lambda k: k[1][0], reverse=True)  # media
 numero = sorted(stats.items(), key=lambda k: k[1][2], reverse=True)  # media
@@ -308,20 +307,12 @@ print(datetime.now() -inizio)
 
 #%% sort pages by revert number
 
-df = get_DataFrame()
-df = df.filter([3, 4, 7, 25, 34, 64, 67], axis=1)
-df.columns = ['timestamp', 'commento', 'utente',
-              'pagina', 'edit_count', 'reverted', 'reverta']
-df_by_page = df.groupby(['pagina']).count().sort_values(
-    by=['utente'], ascending=False)
-
-
-# %%
-
-# %%
-
-
-# %% non so perchè ma non funziona o  forse noon funziona l'altro
+# df = get_DataFrame()
+# df = df.filter([3, 4, 7, 25, 34, 64, 67], axis=1)
+# df.columns = ['timestamp', 'commento', 'utente',
+#               'pagina', 'edit_count', 'reverted', 'reverta']
+# df_by_page = df.groupby(['pagina']).count().sort_values(
+#     by=['utente'], ascending=False)
 
 
 # %%

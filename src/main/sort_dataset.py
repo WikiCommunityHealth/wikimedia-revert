@@ -1,4 +1,4 @@
-
+#from each file of the italian dataset remove everything but reverted/reverter and then sort by page 
 import bz2
 import subprocess
 import os
@@ -26,10 +26,7 @@ for year in range(2001, 2021):
         if len(values) < 2:
             continue
 
-        if values[1] != 'revision':
-            continue
-
-        if values[64] == 'false' and values[67] == 'false':
+        if values[1] != 'revision' and values[64] == 'false' and values[67] == 'false':
             continue
 
         output.write(line + '\n')
