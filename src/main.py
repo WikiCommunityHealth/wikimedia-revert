@@ -1,10 +1,14 @@
 # %% intro
 import bz2
 import pandas as pd
+import numpy as np
 from datetime import datetime
 import json
 import re
 import os
+
+import shutil
+
 
 dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
 #dataset = '/home/gandelli/dev/data/test/paradise.tsv'
@@ -131,7 +135,7 @@ def simple_chains():
     longest_chain = 0
     reverter_id = 0
     current_page = ''
-
+    lunghezze = np.zeros(200)
 
     while line != '':
 
@@ -155,21 +159,24 @@ def simple_chains():
 
         #process new page
         if page_name != current_page:
-            if len(chain) > 2 and len(users) > 1:                        
-                chains.append({'revisions':chain, 'users' : users})
+            if len(chain) > 2 and len(users) > 1: 
+                chains.append({'revisions':chain, 'users' : users,  'len': len(chain)})
+                lunghezze[len(chain)] +=1
+
+            #save past page
             if(len(chains) > 0): 
                 m = getM(chains)
-                savePage(current_page, chains, page_id, total_reverts, longest_chain, m)
+                savePage(current_page, chains, page_id, total_reverts, longest_chain, m, list(lunghezze))
+
                 page_chains[current_page] = chains
                 stats[current_page] = (total_reverts/len(chains) , longest_chain, m)
-                save_pages.write(current_page + '\n')
-                
-                i+=1
 
+            #initialize 
             current_page = page_name
             chains = []
             total_reverts = 0
             longest_chain = 0
+            lunghezze = np.zeros(200)
 
             chain = [rev_id]
             users = {}
@@ -179,18 +186,20 @@ def simple_chains():
             #continue the chain
             if rev_id == reverter_id:                                   #if the currect reverts the previous one
                 chain.append(rev_id)     
-                users[user] = user_rev_count                               
+                users[user] = user_rev_count       
+                                  
             #finish the chain
-            else: 
+            else:      
                 if len(chain) > 2 and len(users) > 1:
                     
-                    chains.append({'revisions':chain, 'users' : users})
-
+                    chains.append({'revisions': chain, 'users' : users, 'len': len(chain)})
+                    #compute page metrics
+                    lunghezze[len(chain)] +=1 # numbero of chains == n
                     total_reverts += len(chain)
                     longest_chain = max(longest_chain, len(chain))
                 
+                #initialize
                 chain = [rev_id]
-
                 users = {}
                 users[user] = user_rev_count
                 
@@ -212,21 +221,26 @@ def is_vandalism(comment):
         return False
 
 
-def savePage(title, chains, id, total_reverts, longest, m):
+def savePage(title, chains, id, total_reverts, longest, m, lunghezze):
     #print('salvo la pagina', title)
     n_files = 10
     path = f"{output}wars_{ id % n_files}.json"
-
+    lun = {}
     dump_out = open(path, 'a')
-
     filesize = os.path.getsize(path)
+    
+    for i in range(1,len(lunghezze)):
+        if(lunghezze[i] > 0):
+            lun[i] = lunghezze[i]
+    
     if filesize == 0:
         dump_out.write('[')
 
-    weight = total_reverts/len(chains)
 
-
-    dump_out.write(json.dumps({'title': title, 'chains': chains,'n_reverts': total_reverts,'mean': weight, 'longest': longest, 'M' : m})+',\n')
+    mean = round(total_reverts/len(chains), 1)
+    
+    dump_out.write(json.dumps({'title': title, 'chains': chains,'n_reverts': total_reverts,'mean': mean,
+                               'longest': longest, 'M' : m , 'lunghezze': lun})+',\n')
     dump_out.close()
 
 def finish_files():
@@ -269,16 +283,18 @@ def getM(chains):
     return (tot * len(utenti))    
 
 
-# %%
-
 
 
 # %% SIMPLE
+shutil.rmtree(output) 
+os.mkdir(output)
 inizio = datetime.now()
 s_chains, stats = simple_chains()
 sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
-sorted(stats.items(), key=lambda k: k[1][1], reverse=True)  # catena piu lunga
-sorted(stats.items(), key=lambda k: k[1][0], reverse=True)  # media
+lunga = sorted(stats.items(), key=lambda k: k[1][1], reverse=True)  # catena piu lunga
+media = sorted(stats.items(), key=lambda k: k[1][0], reverse=True)  # media
+numero = sorted(stats.items(), key=lambda k: k[1][2], reverse=True)  # media
+
 print(datetime.now() - inizio)
 
 
