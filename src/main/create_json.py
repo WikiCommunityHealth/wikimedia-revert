@@ -145,7 +145,7 @@ def simple_chains():
         values = line.split('\t')
 
         # i want only namespace 0 and no vandalism
-        if line == '' or values[28] != '0' or is_vandalism(values[4], values[11]):
+        if line == '' or values[28] != '0' or is_vandalism(values[4]):
             continue
 
 
@@ -160,7 +160,7 @@ def simple_chains():
 
         #process new page
         if page_name != current_page:
-            if len(chain) > 2 and len(users) > 1: 
+            if len(chain) > 2 and len(users) > 1 and not isBot(users): 
                 chains.append({'revisions':chain, 'users' : users,  'len': len(chain)})
                 lunghezze[len(chain)] +=1
 
@@ -191,7 +191,7 @@ def simple_chains():
                                   
             #finish the chain
             else:      
-                if len(chain) > 2 and len(users) > 1:
+                if len(chain) > 2 and len(users) > 1 and not isBot(users):
                     
                     chains.append({'revisions': chain, 'users' : users, 'len': len(chain)})
                     #compute page metrics
@@ -213,9 +213,30 @@ def simple_chains():
     finish_files()
     return (page_chains, stats)
 
-def is_vandalism(comment, role):
+#true if > 50% are bots
+def isBot(users):
+   
+    words = re.compile('bot', re.IGNORECASE)
+    bot = 0
+    utenti = 0
+    for user in users:
+        if words.search(user) :
+             bot += 1
+        else:
+             utenti += 1
+    if bot == 0:
+        return False
+
+    if  utenti/bot > 1:
+        return False
+    else:
+        return True
+            
+
+
+def is_vandalism(comment ):
     words = re.compile('vandal')
-    if words.search(comment) or role == 'bot':
+    if words.search(comment) :
         return True
     else:
         return False
@@ -287,6 +308,8 @@ def get_DataFrame():
 shutil.rmtree(output) 
 os.mkdir(output)
 inizio = datetime.now()
+print(inizio.strftime(" %H:%M:%S"))
+
 s_chains, stats = simple_chains()
 sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
 
