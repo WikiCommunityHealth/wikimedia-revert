@@ -116,32 +116,33 @@ def complex_chains():
 
 #works
 def simple_chains():
-
-    dump_in = bz2.open(dataset, 'r')
     # dump_in = open(dataset, 'r')# for uncompressed
+    dump_in = bz2.open(dataset, 'r')
     line = dump_in.readline()
 
-    save_pages = open(out_pages, 'w')
+    #save_pages = open(out_pages, 'w')
     #pages_chains = open(out_pages_chains, 'w')
     
     i = 0
-
+    #page
     chains = []
-    chain = []
-    
-    page_chains = {}
-    stats = {}
-    users = {}
     total_reverts = 0
     longest_chain = 0
-    reverter_id = 0
     current_page = ''
     lunghezze = np.zeros(200)
+    page_chains = {}
+    stats = {}
 
+    #chain
+    chain = []
+    users = {}
+    start_date = ''
+    end_date = ''
+    reverter_id = 0
+    
     while line != '':
-
+       # line = dump_in.readline().rstrip()[:-1]# for uncompressed
         line = dump_in.readline().rstrip().decode('utf-8')[:-1]
-        # line = dump_in.readline().rstrip()[:-1]# for uncompressed
         values = line.split('\t')
 
         # i want only namespace 0 and no vandalism
@@ -149,7 +150,7 @@ def simple_chains():
             continue
 
 
-    
+        #save fields from dataset
         page_name   = values[25]
         rev_id      = values[52]
         reverter    = values[65]
@@ -157,11 +158,12 @@ def simple_chains():
         user        = values[7]
         page_id     = int(values[23])
         user_rev_count = values[21]
+        timestamp = values[3]
 
         #process new page
         if page_name != current_page:
             if len(chain) > 2 and len(users) > 1 and not isBot(users): 
-                chains.append({'revisions':chain, 'users' : users,  'len': len(chain)})
+                chains.append({'revisions': chain, 'users' : users, 'len': len(chain), 'start': start_date, 'end': end_date})
                 lunghezze[len(chain)] +=1
 
             #save past page
@@ -173,27 +175,30 @@ def simple_chains():
                 stats[current_page] = (total_reverts/len(chains) , longest_chain, m)
 
             #initialize 
+            #page
             current_page = page_name
             chains = []
             total_reverts = 0
             longest_chain = 0
             lunghezze = np.zeros(200)
-
+            #chain
             chain = [rev_id]
             users = {}
             users[user] = user_rev_count
+            start_date = values[3]
              
         else:
             #continue the chain
             if rev_id == reverter_id:                                   #if the currect reverts the previous one
                 chain.append(rev_id)     
-                users[user] = user_rev_count       
+                users[user] = user_rev_count 
+                end_date =  timestamp     
                                   
             #finish the chain
             else:      
                 if len(chain) > 2 and len(users) > 1 and not isBot(users):
                     
-                    chains.append({'revisions': chain, 'users' : users, 'len': len(chain)})
+                    chains.append({'revisions': chain, 'users' : users, 'len': len(chain), 'start': start_date, 'end': end_date})
                     #compute page metrics
                     lunghezze[len(chain)] +=1 # numbero of chains == n
                     total_reverts += len(chain)
@@ -203,6 +208,7 @@ def simple_chains():
                 chain = [rev_id]
                 users = {}
                 users[user] = user_rev_count
+                start_date = timestamp
                 
 
             if is_reverted == 'true':
@@ -232,8 +238,6 @@ def isBot(users):
     else:
         return True
             
-
-
 def is_vandalism(comment ):
     words = re.compile('vandal')
     if words.search(comment) :
