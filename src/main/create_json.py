@@ -162,9 +162,8 @@ def simple_chains():
 
         #process new page
         if page_name != current_page:
-            if len(chain) > 2 and len(users) > 1 and not isBot(users): 
-                chains.append({'revisions': chain, 'users' : users, 'len': len(chain), 'start': start_date, 'end': end_date})
-                lunghezze[len(chain)] +=1
+             
+            total_reverts, longest_chain =  finish_chain(chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain, chains)
 
             #save past page
             if(len(chains) > 0): 
@@ -196,14 +195,9 @@ def simple_chains():
                                   
             #finish the chain
             else:      
-                if len(chain) > 2 and len(users) > 1 and not isBot(users):
-                    
-                    chains.append({'revisions': chain, 'users' : users, 'len': len(chain), 'start': start_date, 'end': end_date})
-                    #compute page metrics
-                    lunghezze[len(chain)] +=1 # numbero of chains == n
-                    total_reverts += len(chain)
-                    longest_chain = max(longest_chain, len(chain))
                 
+                total_reverts, longest_chain =  finish_chain(chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain, chains)
+                    
                 #initialize
                 chain = [rev_id]
                 users = {}
@@ -218,6 +212,17 @@ def simple_chains():
 
     finish_files()
     return (page_chains, stats)
+
+
+def finish_chain(chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain,chains):
+
+    if len(chain) > 2 and len(users) > 1 and not isBot(users):
+        chains.append({'revisions': chain, 'users' : users, 'len': len(chain), 'start': start_date, 'end': end_date})
+        #compute page metrics
+        lunghezze[len(chain)] +=1 # numbero of chains == n
+        total_reverts += len(chain)
+        longest_chain = max(longest_chain, len(chain))
+    return total_reverts, longest_chain
 
 #true if > 50% are bots
 def isBot(users):

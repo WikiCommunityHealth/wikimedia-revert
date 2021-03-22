@@ -11,6 +11,7 @@ dataset_folder = '/home/gandelli/dev/data/it/'
 totali = set()
 revisioni = set()
 revert = set()
+ns0 = set()
 
 for year in range(2001, 2021):
 
@@ -27,14 +28,18 @@ for year in range(2001, 2021):
             page = int(values[23])
 
         totali.add(page)
+        if values[28] == '0':
+            ns0.add(page)
 
-        if values[1] == 'revision':
-            revisioni.add(page)
-        
-            if values[64] == 'true' and values[67] == 'true':
-                revert.add(page)
+            if values[1] == 'revision':
+                revisioni.add(page)
+            
+                if values[64] == 'true' and values[67] == 'true':
+                    revert.add(page)
 
 
 
-print('total page ', len(revisioni), len(totali))
-print('with reverts', len(revert))
+print('total page ',len(totali))
+print('total pages ns0', len(ns0))
+print('total revisions ns0', len(revisioni))
+print('total revert ns0', len(revert) )
