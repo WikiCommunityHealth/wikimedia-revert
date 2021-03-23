@@ -14,14 +14,22 @@
 #  'lunghezze': {'3': 1}}
 
 import json
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import json
+import pandas as pd
+import matplotlib.dates as mdates
+
 
 dataset_folder = '/home/gandelli/dev/data/wars/'
 i = 10 # number of files in the wars folder
 
 pagine = 0
 
-reverts= {}
-
+reverts = {}
+chain_month = {}
+mean = {}
 
 for i in range (0,i):
     dump_in = open(f"{dataset_folder}wars_{i}.json")
@@ -31,10 +39,49 @@ for i in range (0,i):
         if line == '{}]' or line == '':
             continue
         page = json.loads(line[:-2])
-        reverts[page['title']] = page['M']
+        reverts[page['title']] = page['longest']
+        for chain in page['chains']:
+            chain_month[chain['start']] = chain['len']
+            mean[page['title']] = page['mean']
         
         
-# %%
+
+
+# %% number of pages that have n as longest chain
+
+df = pd.DataFrame(reverts.items(), columns=['n_of_pages', 'longest_chain'])
+df = df.groupby(['longest_chain']).count()
+plt.style.use('ggplot')
+df.plot.bar(figsize=(15,5), logy = True, legend='False')
+
+df[0:10].plot.bar(figsize=(15,5))
+df[5:15].plot.bar(figsize=(15,5))
+df[10:20].plot.bar(figsize=(15,5))
+
+
+#%% number of chains of reverts per month
+
+df = pd.DataFrame(chain_month.items(),  columns=['timestamp', 'len'])
+df['timestamp'] = pd.to_datetime(df['timestamp'])
+df = df.groupby(pd.Grouper(key='timestamp', freq='M')).count()
+ax = df.plot.bar(figsize=(15,5))
+#ax.xaxis.set_major_locator(mdates.MonthLocator(interval=1))
+#ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%y'))
+ax.set_xticks(ax.get_xticks()[::12])
+plt.gcf().autofmt_xdate()
+
+plt.show()
+
+#%% number of pages that have the (rounded) mean length of the chains
+
+df = pd.DataFrame(mean.items(), columns=['title', 'mean'])
+df = df.groupby(df['mean'].apply(lambda x: round(x, 0))).count()
+plt.style.use('ggplot')
+df['mean'].plot.bar(figsize=(15,5), logy = True)
+
+
+
+
 
 # %%
 ordinata = sorted(reverts.items(), key=lambda item: item[1], reverse = True)
