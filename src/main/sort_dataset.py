@@ -1,4 +1,4 @@
-#from each file of the italian dataset remove everything but reverted/reverter and then sort by page 
+#from each file of the  dataset remove everything but reverted/reverter and then sort by page 
 import bz2
 import subprocess
 import os
