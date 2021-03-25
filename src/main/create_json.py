@@ -268,7 +268,7 @@ def savePage(title, chains, id, total_reverts, longest, m, lunghezze):
 
     mean = round(total_reverts/len(chains), 1)
     
-    dump_out.write(json.dumps({'title': title, 'chains': chains,'n_reverts': total_reverts,'mean': mean,
+    dump_out.write(json.dumps({'title': title, 'chains': chains,'n_chains' : len(chains),'n_reverts': total_reverts,'mean': mean,
                                'longest': longest, 'M' : m , 'lunghezze': lun})+',\n')
     dump_out.close()
 
