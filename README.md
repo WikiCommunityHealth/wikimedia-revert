@@ -18,8 +18,8 @@ nop with reverts ns0             126569
 2) create_json  : wars -> json file which contains info about chains (json)
 3) compute_by_month: json -> tsv which contains stats per page by month (monthly_wars)
 
-# json 
-
+## json 
+```
 {
     "title": "Loligo_vulgaris", 
     "chains": 
@@ -37,11 +37,13 @@ nop with reverts ns0             126569
     "M": 0, 
     "lunghezze": {"3": 1}
 }
+```
 
-# monthly wars
+## monthly wars
 
-## structure 
+### structure 
+```
 title    year_month    nchain    nrev    mean    longest     
-
+```
 # info
 I use the start date of a chain for classification 
