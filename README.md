@@ -43,7 +43,21 @@ nop with reverts ns0             126569
 
 ### structure 
 ```
-title    year_month    nchain    nrev    mean    longest     
+title    year_month    nchain    nrev    mean    longest     more_than5      more_than7      more_than9      M
 ```
-# info
+### info
 I use the start date of a chain for classification 
+
+## done 
+dai json ho estratto i dati e creato un tsv con i dati separati per mese come sopra specificato 
+ho poi calcolato diverse metriche come 
+### from json
+
+- plot : numero di pagine raggruppate per longest_chain
+- plot : numero di catene per ogni mese 
+- plot : numero di pagine raggruppate per media (arrotondata all'intero piu vicino)
+- file : numero di catene per utente 
+### from tsv
+
+- plot + file : numero di pagine con almeno una catena per ogni mese 
+- file : numero di mesi in cui una pagina ha almeno una catena 

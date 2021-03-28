@@ -1,5 +1,11 @@
 
-#%%
+#%% import
+import json
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import csv
+
 # PAGE EXAMPLE
 # {'title': 'Zuppa_di_pesce_(film)',
 #  'chains': [{'revisions': ['95861493', '95861612', '95973728'],
@@ -14,15 +20,9 @@
 #  'M': 0,
 #  'lunghezze': {'3': 1}}
 
-import json
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import json
-import pandas as pd
-import matplotlib.dates as mdates
+output_folder = '/home/gandelli/dev/data/analyze_wars/'
 
-
+# read jsons file 
 dataset_folder = '/home/gandelli/dev/data/wars/'
 i = 10 # number of files in the wars folder
 
@@ -31,6 +31,7 @@ pagine = 0
 reverts = {}
 chain_month = {}
 mean = {}
+utenti = []
 
 for i in range (0,i):
     dump_in = open(f"{dataset_folder}wars_{i}.json")
@@ -40,19 +41,22 @@ for i in range (0,i):
         if line == '{}]' or line == '':
             continue
         page = json.loads(line[:-2])
+
         reverts[page['title']] = page['longest']
         for chain in page['chains']:
             chain_month[chain['start']] = chain['len']
             mean[page['title']] = page['mean']
+            for utente in list(chain['users']):
+                utenti.append(utente)
         
         
 
 
-# %% number of pages that have n as longest chain
+# %% plot  number of pages that have n as longest chain
 
 df = pd.DataFrame(reverts.items(), columns=['n_of_pages', 'longest_chain'])
 df = df.groupby(['longest_chain']).count()
-plt.style.use('ggplot')
+plt.style.use('seaborn')
 df.plot.bar(figsize=(15,5), logy = True, legend='False')
 
 df[0:10].plot.bar(figsize=(15,5))
@@ -77,16 +81,13 @@ plt.show()
 
 df = pd.DataFrame(mean.items(), columns=['title', 'mean'])
 df = df.groupby(df['mean'].apply(lambda x: round(x, 0))).count()
-plt.style.use('ggplot')
+plt.style.use('seaborn')
 df['mean'].plot.bar(figsize=(15,5), logy = True)
 
+#%% number or chains each member is involved
+
+df = pd.DataFrame(utenti)
+grouped = df.groupby([0])[0].count().reset_index(name="count").sort_values('count', ascending = False)
+grouped.to_csv(output_folder + 'n_chain_joined.tsv', sep="\t", quoting=csv.QUOTE_NONE)
 
 
-
-
-# %%
-ordinata = sorted(reverts.items(), key=lambda item: item[1], reverse = True)
-out = open('/home/gandelli/dev/data/risultati/controversiality.txt', 'w')
-for el in ordinata:
-    out.write(el[0]+' '+ str(el[1])+ '\n')
-# %%
