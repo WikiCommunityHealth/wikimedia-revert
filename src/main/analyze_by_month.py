@@ -28,4 +28,5 @@ grouped = df.groupby('titolo').count().sort_values('month', ascending = False)
 grouped['month'].to_csv(folder + 'grouped_by_page_sorted.tsv', sep="\t", quoting=csv.QUOTE_NONE)
 
 
-# %%
+# %% pages which have >2 chains longer than 9 sorted by controversiality
+df[df['more_than9'] > 2].sort_values('M', ascending=False)

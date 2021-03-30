@@ -21,10 +21,10 @@ import pandas as pd
 
 
 dataset_folder = '/home/gandelli/dev/data/wars/'
-output = '/home/gandelli/dev/data/montly_stats.tsv'
+output = '/home/gandelli/dev/data/monthly/all.tsv'
 
 out = open(output, 'w')
-out.write('titolo\tmonth\tnchain\tnrev\tmean\tlongest\tmore_than5\tmore_than7\tmore_than9\tM\n')
+out.write('titolo\tmonth\tnchain\tnrev\tmean\tlongest\tmore_than5\tmore_than7\tmore_than9\tM\tinvolved\n')
 
 pagine = 0
 
@@ -72,8 +72,10 @@ def by_month(page):
         
         if year_month != current_year_month:
             mean = round(n_rev/n_chain, 1)
-            M = getM(chains)
-            save(page['title'], year_month, n_chain, n_rev, mean, longest, int(more_than[5]),int(more_than[7]),int(more_than[9]), M)
+            M,involved = getM(chains)
+            
+            
+            save(page['title'], year_month, n_chain, n_rev, mean, longest, int(more_than[5]),int(more_than[7]),int(more_than[9]), M, involved)
             
             current_year_month = year_month
             n_chain = 0
@@ -88,8 +90,8 @@ def by_month(page):
 
 
 
-def save(title, year_month, n_chain, n_rev, mean, longest, more5, more7, more9, M):
-    out.write(f'{title}\t {year_month}\t {n_chain}\t {n_rev}\t {mean}\t {longest}\t {more5}\t {more7}\t {more9}\t {M}\n')
+def save(title, year_month, n_chain, n_rev, mean, longest, more5, more7, more9, M, involved):
+    out.write(f'{title}\t {year_month}\t {n_chain}\t {n_rev}\t {mean}\t {longest}\t {more5}\t {more7}\t {more9}\t {M}\t {involved}\n')
     #print(title, year_month, n_chain, n_rev, mean, longest)
 
 def getM(chains):
@@ -106,7 +108,7 @@ def getM(chains):
                 a = min(a, 0)
         tot += a
 
-    return (tot * len(utenti))    
+    return ((tot * len(utenti)), str(utenti))    
 # %%
 main()
 # %%
