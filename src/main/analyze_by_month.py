@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import csv
 from calendar import month_abbr
 
-folder = '/home/gandelli/dev/data/monthly/'
+folder = '/home/gandelli/dev/data/monthly/pages/'
 
 df = pd.read_csv(folder + 'all.tsv', sep='\t')
 df['month'] =pd.to_datetime(df.month)

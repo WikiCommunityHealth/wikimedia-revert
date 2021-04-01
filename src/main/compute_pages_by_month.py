@@ -21,7 +21,7 @@ import pandas as pd
 
 
 dataset_folder = '/home/gandelli/dev/data/wars/'
-output = '/home/gandelli/dev/data/monthly/all.tsv'
+output = '/home/gandelli/dev/data/monthly/pages/all.tsv'
 
 out = open(output, 'w')
 out.write('titolo\tmonth\tnchain\tnrev\tmean\tlongest\tmore_than5\tmore_than7\tmore_than9\tM\tinvolved\n')

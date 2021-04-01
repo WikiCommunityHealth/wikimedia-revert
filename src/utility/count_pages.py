@@ -1,3 +1,4 @@
+# count numbers of pages from the Mediawiki history dumps
 import bz2
 import subprocess
 import os
