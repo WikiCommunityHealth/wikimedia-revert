@@ -58,10 +58,14 @@ df = pd.DataFrame(reverts.items(), columns=['n_of_pages', 'longest_chain'])
 df = df.groupby(['longest_chain']).count()
 plt.style.use('seaborn')
 df.plot.bar(figsize=(15,5), logy = True, legend='False')
+plt.savefig('/home/gandelli/dev/data/plots/longest_chain.png', dpi=300, bbox_inches='tight')
 
 df[0:10].plot.bar(figsize=(15,5))
+plt.savefig('/home/gandelli/dev/data/plots/longest_chain0_10.png', dpi=300, bbox_inches='tight')
 df[5:15].plot.bar(figsize=(15,5))
+plt.savefig('/home/gandelli/dev/data/plots/longest_chain5_15.png', dpi=300, bbox_inches='tight')
 df[10:20].plot.bar(figsize=(15,5))
+plt.savefig('/home/gandelli/dev/data/plots/longest_chain10_20.png', dpi=300, bbox_inches='tight')
 
 
 #%% number of chains of reverts per month
@@ -75,7 +79,10 @@ ax = df.plot.bar(figsize=(15,5))
 ax.set_xticks(ax.get_xticks()[::12])
 plt.gcf().autofmt_xdate()
 
+plt.savefig('/home/gandelli/dev/data/plots/chains_per_month.png', dpi=300, bbox_inches='tight')
+
 plt.show()
+
 
 #%% number of pages that have the (rounded) mean length of the chains
 
@@ -83,6 +90,8 @@ df = pd.DataFrame(mean.items(), columns=['title', 'mean'])
 df = df.groupby(df['mean'].apply(lambda x: round(x, 0))).count()
 plt.style.use('seaborn')
 df['mean'].plot.bar(figsize=(15,5), logy = True)
+plt.savefig('/home/gandelli/dev/data/plots/page_mean.png', dpi=300, bbox_inches='tight')
+
 
 #%% number or chains each member is involved
 
