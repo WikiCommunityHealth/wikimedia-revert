@@ -1,24 +1,6 @@
-usare databse grosso 
-salvare pagine in bin ci 10k o piu pagine 
 
+# aggiustare il fatto che le json war per utente perdono qualcosa
 
-guardare hash 
-
-paper yasseri
-
-
-
-metriche a se per i bot 
-
-guardare rev count come yasseri per vedere di che calibro sono i soldati 
-
-guardare codice di david 
-
-nel filter tagliare le colonne che non servono specialmente con l'inglese
-
-tagòiare colonne inutili 
-revision count come yasseri 
-aggiustare
 
 
 colonne: 20 char 
@@ -65,16 +47,3 @@ colonne: 20 char
 1 2 14 15 16 19 29 30 31 35-51 55 56 60 61 62 63 68
 
 
-ce ne sono alcune rotte tipo 
-Paradisi_per_illusi -> "Paradis_(Louisiana)"
-
-Night_of_the_Speed_Demons -> Night_of_the_Mark_VII
-
-Paradisi_per_illusi
-Paradisland
-Paradis_(Louisiana)  contiene la catena di paradisi per illusi 
-
-
-Night_of_the_Mark_VII
-Night_of_the_Speed_Demons contiene catena di quello sopra
-Night_Visions_(serie_televisiva)

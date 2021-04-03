@@ -159,7 +159,7 @@ def simple_chains():
         #process new page
         if page_name != current_page:
              
-            total_reverts, longest_chain =  finish_chain(chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain, chains)
+            total_reverts, longest_chain =  finish_chain(current_page, chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain, chains)
 
             #save past page
             if(len(chains) > 0): 
@@ -192,7 +192,7 @@ def simple_chains():
             #finish the chain
             else:      
                 
-                total_reverts, longest_chain =  finish_chain(chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain, chains)
+                total_reverts, longest_chain = finish_chain(current_page, chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain, chains)
                     
                 #initialize
                 chain = [rev_id]
@@ -209,10 +209,10 @@ def simple_chains():
     finish_files()
     return (page_chains, stats)
 
-def finish_chain(chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain,chains):
+def finish_chain(page, chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain,chains):
 
     if len(chain) > 2 and len(users) > 1 and not isBot(users):
-        chains.append({'revisions': chain, 'users' : users, 'len': len(chain), 'start': start_date, 'end': end_date})
+        chains.append({'page':page, 'revisions': chain, 'users' : users, 'len': len(chain), 'start': start_date, 'end': end_date})
         #compute page metrics
         lunghezze[len(chain)] +=1 # numbero of chains == n
         total_reverts += len(chain)
