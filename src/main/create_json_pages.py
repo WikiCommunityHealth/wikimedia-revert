@@ -10,13 +10,9 @@ import os
 import shutil
 
 
-dataset = '/home/gandelli/dev/data/it/filtered_sorted_it.tsv.bz2'
-#dataset = '/home/gandelli/dev/data/test/paradise.tsv'
-output = '/home/gandelli/dev/data/wars/'
-out_pages = '/home/gandelli/dev/data/pages.txt'
-#out_pages_chains = '/home/gandelli/dev/data/pages_chains.txt'
-
-
+dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
+output = '/home/gandelli/dev/data/wars_json/pages/'
+#out_pages = '/home/gandelli/dev/data/pages.txt'
 
 # l'ultima colonna è fals invece che false
 
@@ -213,7 +209,6 @@ def simple_chains():
     finish_files()
     return (page_chains, stats)
 
-
 def finish_chain(chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain,chains):
 
     if len(chain) > 2 and len(users) > 1 and not isBot(users):
@@ -223,7 +218,6 @@ def finish_chain(chain, users, start_date, end_date, lunghezze, total_reverts, l
         total_reverts += len(chain)
         longest_chain = max(longest_chain, len(chain))
     return total_reverts, longest_chain
-
 #true if > 50% are bots
 def isBot(users):
    

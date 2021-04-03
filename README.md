@@ -16,7 +16,7 @@ nop with reverts ns0             126569
 
 1) sort_dataset : tsv raw dataset -> tsv which contains revert sorted by page (wars)
 2) create_json  : wars -> json file which contains info about chains (json)
-3) compute_by_month: json -> tsv which contains stats per page by month (monthly_wars)
+3) compute_by_month: json -> tsv which contains stats per page by month (monthly/pages/all.tsv) -> tsv stats per user by month (monthly/users/all.tsv)
 
 ## json 
 ```

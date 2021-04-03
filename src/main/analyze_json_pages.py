@@ -23,7 +23,7 @@ import csv
 output_folder = '/home/gandelli/dev/data/analyze_wars/'
 
 # read jsons file 
-dataset_folder = '/home/gandelli/dev/data/wars/'
+dataset_folder = '/home/gandelli/dev/data/wars_json/pages/'
 i = 10 # number of files in the wars folder
 
 pagine = 0
@@ -31,7 +31,7 @@ pagine = 0
 reverts = {}
 chain_month = {}
 mean = {}
-utenti = []
+utenti = [] 
 
 for i in range (0,i):
     dump_in = open(f"{dataset_folder}wars_{i}.json")
