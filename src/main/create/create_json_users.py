@@ -54,18 +54,18 @@ def compute_users(users):
         longest = 0
         lunghezze = np.zeros(200)
 
-        m = getM(chains)
+        g = getG(chains)
         for chain in chains:
             total_reverts += chain['len']
             longest = max(longest, chain['len'])
             lunghezze[chain['len']] +=1
         
-        save_user(name, chains, total_reverts, longest, m, lunghezze, i)
+        save_user(name, chains, total_reverts, longest, g, lunghezze, i)
         i+=1
     
     finish_files()
         
-def save_user(name, chains, total_reverts, longest, m, lunghezze, n):
+def save_user(name, chains, total_reverts, longest, g, lunghezze, n):
     mean = round(total_reverts/len(chains), 1)
     lun = {}
     n_files = 10
@@ -80,9 +80,9 @@ def save_user(name, chains, total_reverts, longest, m, lunghezze, n):
     if filesize == 0:
         dump_out.write('[')
 
-    dump_out.write(json.dumps({'user': name, 'chains': chains,'n_chains' : len(chains),'n_reverts': total_reverts,'mean': mean, 'longest': longest, 'M' : m , 'lunghezze': lun})+',\n')
+    dump_out.write(json.dumps({'user': name, 'chains': chains,'n_chains' : len(chains),'n_reverts': total_reverts,'mean': mean, 'longest': longest, 'G' : g , 'lunghezze': lun})+',\n')
 
-def getM(chains):
+def getG(chains):
     tot = 0
     utenti = set()
     for chain in chains:

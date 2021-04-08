@@ -163,11 +163,11 @@ def simple_chains():
 
             #save past page
             if(len(chains) > 0): 
-                m = getM(chains)
-                savePage(current_page, chains, page_id, total_reverts, longest_chain, m, list(lunghezze))
+                g = getG(chains)
+                savePage(current_page, chains, page_id, total_reverts, longest_chain, g, list(lunghezze))
 
                 page_chains[current_page] = chains
-                stats[current_page] = (total_reverts/len(chains) , longest_chain, m)
+                stats[current_page] = (total_reverts/len(chains) , longest_chain, g)
 
             #initialize 
             #page
@@ -244,7 +244,7 @@ def is_vandalism(comment ):
     else:
         return False
 
-def savePage(title, chains, id, total_reverts, longest, m, lunghezze):
+def savePage(title, chains, id, total_reverts, longest, g, lunghezze):
     #print('salvo la pagina', title)
     n_files = 10
     path = f"{output}wars_{ id % n_files}.json"
@@ -263,7 +263,7 @@ def savePage(title, chains, id, total_reverts, longest, m, lunghezze):
     mean = round(total_reverts/len(chains), 1)
     
     dump_out.write(json.dumps({'title': title, 'chains': chains,'n_chains' : len(chains),'n_reverts': total_reverts,'mean': mean,
-                               'longest': longest, 'M' : m , 'lunghezze': lun})+',\n')
+                               'longest': longest, 'G' : g , 'lunghezze': lun})+',\n')
     dump_out.close()
 
 def finish_files():
@@ -273,7 +273,7 @@ def finish_files():
         # andrebbe cancellata la virgola, uso questo trick per farlo sintatticamente corretto
         dump_out.write('{}]')
 
-def getM(chains):
+def getG(chains):
     tot = 0
     utenti = set()
     for chain in chains:
@@ -324,10 +324,10 @@ print(datetime.now() - inizio)
 
 
 # %% COMPLEX 
-inizio = datetime.now()
-c_chains = complex_chains()
-sorted(c_chains, key=lambda k: len(c_chains[k]), reverse=True)
-print(datetime.now() -inizio)
+#inizio = datetime.now()
+#c_chains = complex_chains()
+#sorted(c_chains, key=lambda k: len(c_chains[k]), reverse=True)
+#print(datetime.now() -inizio)
 
 
 

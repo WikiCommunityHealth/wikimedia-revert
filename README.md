@@ -34,7 +34,7 @@ nop with reverts ns0             126569
     "n_reverts": 3, 
     "mean": 3.0, 
     "longest": 3, 
-    "M": 0, 
+    "G": 0, 
     "lunghezze": {"3": 1}
 }
 ```
@@ -43,10 +43,12 @@ nop with reverts ns0             126569
 
 ### structure 
 ```
-title    year_month    nchain    nrev    mean    longest     more_than5      more_than7      more_than9      M
+title    year_month    nchain    nrev    mean    longest     more_than5      more_than7      more_than9      G
 ```
 ### info
 I use the start date of a chain for classification 
+
+G is a metric that's similar to M which evalue the chains in a page, when in a chain are involved users with a big edit count G will be bigger
 
 ## done 
 dai json ho estratto i dati e creato un tsv con i dati separati per mese come sopra specificato 

@@ -27,10 +27,10 @@ output_pages = '/home/gandelli/dev/data/monthly/pages/all.tsv'
 output_users = '/home/gandelli/dev/data/monthly/users/all.tsv'
 
 out_pages = open(output_pages, 'w')
-out_pages.write('titolo\tmonth\tnchain\tnrev\tmean\tlongest\tmore_than5\tmore_than7\tmore_than9\tM\tinvolved\n')
+out_pages.write('titolo\tmonth\tnchain\tnrev\tmean\tlongest\tmore_than5\tmore_than7\tmore_than9\tG\tinvolved\n')
 
 out_users = open(output_users, 'w')
-out_users.write('user\tmonth\tnchain\tnrev\tmean\tlongest\tmore_than5\tmore_than7\tmore_than9\tM\tinvolved\n')
+out_users.write('user\tmonth\tnchain\tnrev\tmean\tlongest\tmore_than5\tmore_than7\tmore_than9\tG\tinvolved\n')
 
 pagine = 0
 
@@ -81,12 +81,12 @@ def by_month(page):
         
         if year_month != current_year_month:
             mean = round(n_rev/n_chain, 1)
-            M,involved = getM(chains)
+            G,involved = getG(chains)
             
             if 'title' in page:
-                save_page(page['title'], year_month, n_chain, n_rev, mean, longest, int(more_than[5]),int(more_than[7]),int(more_than[9]), M, involved)
+                save_page(page['title'], year_month, n_chain, n_rev, mean, longest, int(more_than[5]),int(more_than[7]),int(more_than[9]), G, involved)
             elif 'user' in page:
-                save_user(page['user'], year_month, n_chain, n_rev, mean, longest, int(more_than[5]),int(more_than[7]),int(more_than[9]), M, involved)
+                save_user(page['user'], year_month, n_chain, n_rev, mean, longest, int(more_than[5]),int(more_than[7]),int(more_than[9]), G, involved)
             
             current_year_month = year_month
             n_chain = 0
@@ -99,14 +99,14 @@ def by_month(page):
     df = pd.DataFrame(utenti)
     grouped = df.groupby([0])[0].count().reset_index(name="count").sort_values('count', ascending = False)
 
-def save_page(title, year_month, n_chain, n_rev, mean, longest, more5, more7, more9, M, involved):
-    out_pages.write(f'{title}\t {year_month}\t {n_chain}\t {n_rev}\t {mean}\t {longest}\t {more5}\t {more7}\t {more9}\t {M}\t {involved}\n')
+def save_page(title, year_month, n_chain, n_rev, mean, longest, more5, more7, more9, G, involved):
+    out_pages.write(f'{title}\t {year_month}\t {n_chain}\t {n_rev}\t {mean}\t {longest}\t {more5}\t {more7}\t {more9}\t {G}\t {involved}\n')
     #print(title, year_month, n_chain, n_rev, mean, longest)
 
-def save_user(user, year_month, n_chain, n_rev, mean, longest, more5, more7, more9, M, involved):
-    out_users.write(f'{user}\t {year_month}\t {n_chain}\t {n_rev}\t {mean}\t {longest}\t {more5}\t {more7}\t {more9}\t {M}\t {involved}\n')
+def save_user(user, year_month, n_chain, n_rev, mean, longest, more5, more7, more9, G, involved):
+    out_users.write(f'{user}\t {year_month}\t {n_chain}\t {n_rev}\t {mean}\t {longest}\t {more5}\t {more7}\t {more9}\t {G}\t {involved}\n')
 
-def getM(chains):
+def getG(chains):
 
     tot = 0
     utenti = set()
