@@ -33,6 +33,7 @@ def simple_chains():
     chains = []
     total_reverts = 0
     longest_chain = 0
+    current_page_id = 0
     current_page = ''
     lunghezze = np.zeros(200)
     page_chains = {}
@@ -60,13 +61,13 @@ def simple_chains():
         rev_id      = values[52]
         reverter    = values[65]
         is_reverted = values[64]
-        user        = values[7]
+        user        = values[6]
         page_id     = int(values[23])
         user_rev_count = values[21]
         timestamp = values[3]
 
         #process new page
-        if page_name != current_page:
+        if page_id != current_page_id:
              
             total_reverts, longest_chain =  finish_chain(current_page, chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain, chains)
 
@@ -80,6 +81,7 @@ def simple_chains():
 
             #initialize 
             #page
+            current_page_id = page_id
             current_page = page_name
             chains = []
             total_reverts = 0
