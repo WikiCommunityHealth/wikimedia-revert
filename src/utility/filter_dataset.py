@@ -7,7 +7,7 @@ from datetime import datetime
 
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 
-output_file = '/home/gandelli/dev/data/test/lisaAnn.tsv'
+output_file = '/home/gandelli/dev/data/test/nomevuoto.tsv'
 
 
 dump_in = bz2.open(dataset, 'r')
@@ -38,8 +38,10 @@ while line != '':
         continue
     
    
-    if values[25] == page_name:
+    if values[7] == '':
         output.write(line + '\n')
+
+    
 
 dump_in.close()
 

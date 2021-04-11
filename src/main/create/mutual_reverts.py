@@ -9,7 +9,7 @@ import os
 
 import shutil
 
-
+contoedit = {}
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 
 
@@ -39,7 +39,7 @@ def main():
 
         page_id = int(values[23])
         page_name   = values[25]
-        user = values[7]
+        user = values[6]
         user_edit_count = values[21]
         rev_id      = values[52]
         reverter    = values[65]
@@ -70,7 +70,8 @@ def main():
                 reverter_id = reverter
                 reverted_user = user
     return pages_m
-  
+
+#i pass every time the edit count so it consider the edit count at the time of the revert
 def get_M(reverts, edit_count, page):
 
     mutual = set()
@@ -87,8 +88,16 @@ def get_M(reverts, edit_count, page):
     m = 0
     for couple in mutual:
         m += edit_count[couple[0]] * edit_count[couple[1]]
+        if page == 'Gué_Pequeno':
+            print(couple, edit_count[couple[0]] , edit_count[couple[1]] ,'=',edit_count[couple[0]] * edit_count[couple[1]])
+
     m *= len(mutual)
 
+    if page == 'Gué_Pequeno':
+        #print(mutual)
+        print(edit_count['Phantomas'],edit_count['Dennis Radaelli'] )
+        print(edit_count['DogoManagement'],edit_count['Causa83'] )
+        print(edit_count['Jiassike'],edit_count['Dennis Radaelli'] )
     return m
 
 def is_bot(user):
