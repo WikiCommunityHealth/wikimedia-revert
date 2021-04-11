@@ -36,8 +36,12 @@ pagine = 0
 
 #%%
 def main():
+    inizio = datetime.now()
+    print(inizio.strftime(" %H:%M:%S"))
     read_json(dataset_folder_pages)
+    print('pagine fatte', datetime.now() - inizio)
     read_json(dataset_folder_users)
+    print('utenti fatti', datetime.now() - inizio)
     
     #users
 

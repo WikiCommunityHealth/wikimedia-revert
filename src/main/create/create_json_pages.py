@@ -39,12 +39,17 @@ def simple_chains():
     page_chains = {}
     stats = {}
 
+    reverted_m = {} # all the users a user reverted 
+    edit_count = {}
+    pages_m = {}
+
     #chain
     chain = []
     users = {}
     start_date = ''
     end_date = ''
     reverter_id = 0
+    reverted_user = ''
     
     while line != '':
        # line = dump_in.readline().rstrip()[:-1]# for uncompressed
@@ -58,13 +63,20 @@ def simple_chains():
 
         #save fields from dataset
         page_name   = values[25]
+        page_id     = int(values[23])
+
         rev_id      = values[52]
         reverter    = values[65]
         is_reverted = values[64]
         user        = values[6]
-        page_id     = int(values[23])
+        user_edit_count = values[21]
         user_rev_count = values[21]
         timestamp = values[3]
+
+        if user_edit_count != '':
+            edit_count[user] = int(user_edit_count)
+        else:
+            edit_count[user] = 0
 
         #process new page
         if page_id != current_page_id:
@@ -74,7 +86,8 @@ def simple_chains():
             #save past page
             if(len(chains) > 0): 
                 g = getG(chains)
-                savePage(current_page, chains, page_id, total_reverts, longest_chain, g, list(lunghezze))
+                m = get_M(reverted_m, edit_count, current_page)
+                savePage(current_page, chains, page_id, total_reverts, longest_chain, g, list(lunghezze), m)
 
                 page_chains[current_page] = chains
                 stats[current_page] = (total_reverts/len(chains) , longest_chain, g)
@@ -87,6 +100,7 @@ def simple_chains():
             total_reverts = 0
             longest_chain = 0
             lunghezze = np.zeros(200)
+            reverted_m = {}
             #chain
             chain = [rev_id]
             users = {}
@@ -98,7 +112,8 @@ def simple_chains():
             if rev_id == reverter_id:                                   #if the currect reverts the previous one
                 chain.append(rev_id)     
                 users[user] = user_rev_count 
-                end_date =  timestamp     
+                end_date =  timestamp
+                reverted_m.setdefault(user, []).append(reverted_user)     
                                   
             #finish the chain
             else:      
@@ -114,7 +129,7 @@ def simple_chains():
 
             if is_reverted == 'true':
                 reverter_id = reverter # save
-            
+                reverted_user = user
     #pages_chains.write(list(page_chains))
 
     finish_files()
@@ -122,7 +137,7 @@ def simple_chains():
 
 def finish_chain(page, chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain,chains):
 
-    if len(chain) > 2 and len(users) > 1 and not isBot(users):
+    if len(chain) > 2 and len(users) > 1 and not more_than_bot(users):
         chains.append({'page':page, 'revisions': chain, 'users' : users, 'len': len(chain), 'start': start_date, 'end': end_date})
         #compute page metrics
         lunghezze[len(chain)] +=1 # numbero of chains == n
@@ -130,23 +145,21 @@ def finish_chain(page, chain, users, start_date, end_date, lunghezze, total_reve
         longest_chain = max(longest_chain, len(chain))
     return total_reverts, longest_chain
 #true if > 50% are bots
-def isBot(users):
-   
-    words = re.compile('bot', re.IGNORECASE)
+def more_than_bot(users):
+ 
     bot = 0
     utenti = 0
     for user in users:
-        if words.search(user) :
+        if is_bot(user) :
              bot += 1
         else:
              utenti += 1
+             
     if bot == 0:
         return False
 
-    if  utenti/bot > 1:
-        return False
-    else:
-        return True
+    return utenti/bot > 1
+ 
             
 def is_vandalism(comment ):
     words = re.compile('vandal')
@@ -155,7 +168,7 @@ def is_vandalism(comment ):
     else:
         return False
 
-def savePage(title, chains, id, total_reverts, longest, g, lunghezze):
+def savePage(title, chains, id, total_reverts, longest, g, lunghezze,m):
     #print('salvo la pagina', title)
     n_files = 10
     path = f"{output}wars_{ id % n_files}.json"
@@ -174,7 +187,7 @@ def savePage(title, chains, id, total_reverts, longest, g, lunghezze):
     mean = round(total_reverts/len(chains), 1)
     
     dump_out.write(json.dumps({'title': title, 'chains': chains,'n_chains' : len(chains),'n_reverts': total_reverts,'mean': mean,
-                               'longest': longest, 'G' : g , 'lunghezze': lun})+',\n')
+                               'longest': longest, 'G' : g ,'M': m , 'lunghezze': lun})+',\n')
     dump_out.close()
 
 def finish_files():
@@ -200,6 +213,29 @@ def getG(chains):
 
     return (tot * len(utenti))    
 
+def get_M(reverts, edit_count, page):
+
+    mutual = set()
+    biggest_couple = 0
+
+    for user, reverted in reverts.items():
+        for rev in reverted:
+            if rev in reverts.keys():
+                if user in reverts[rev]:
+                    if not is_bot(user) or not is_bot(rev):
+                        if user > rev:              
+                            mutual.add((user,rev))
+                        elif user < rev:
+                            mutual.add((rev,user))
+    m = 0
+    for couple in mutual:
+        partial = edit_count[couple[0]] * edit_count[couple[1]]
+        m += partial
+
+    m *= len(mutual)
+
+    return m
+
 def get_DataFrame():
 
     dump_in = bz2.open(dataset, 'r')
@@ -215,7 +251,11 @@ def get_DataFrame():
 
     return pd.DataFrame(df)
 
-
+def is_bot(user):
+    words = re.compile('bot', re.IGNORECASE)
+    return words.search(user)
+    
+             
 
 
 # %% SIMPLE
