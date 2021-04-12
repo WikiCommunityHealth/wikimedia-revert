@@ -5,6 +5,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
+from datetime import datetime
+
+inizio = datetime.now()
+print(inizio.strftime(" %H:%M:%S"))
 
 # PAGE EXAMPLE
 # {'title': 'Zuppa_di_pesce_(film)',
@@ -33,6 +37,10 @@ chain_month = {}
 mean = {}
 utenti = [] 
 
+
+
+m_pages = []
+
 for i in range (0,i):
     dump_in = open(f"{dataset_folder}wars_{i}.json")
     line = dump_in.readline()
@@ -42,6 +50,13 @@ for i in range (0,i):
             continue
         page = json.loads(line[:-2])
 
+        m_pages.append(
+        {
+            'title': page['title'],
+            'M': page['M']+1,
+            'G':  page['G']+1
+        })
+
         reverts[page['title']] = page['longest']
         for chain in page['chains']:
             chain_month[chain['start']] = chain['len']
@@ -50,7 +65,7 @@ for i in range (0,i):
                 utenti.append(utente)
         
         
-
+print(datetime.now() - inizio)
 
 # %% plot  number of pages that have n as longest chain
 
@@ -100,3 +115,10 @@ grouped = df.groupby([0])[0].count().reset_index(name="count").sort_values('coun
 grouped.to_csv(output_folder + 'n_chain_joined.tsv', sep="\t", quoting=csv.QUOTE_NONE)
 
 
+#%%
+
+#sorted_m_pages = sorted(m_pages, key=lambda k: k['M'], reverse=True)
+df = pd.DataFrame(m_pages, columns=['title', 'M','G'])
+df['rapporto'] = df['M'] /df['G']
+#df[0:30].plot.bar(figsize=(15,5), logy = True, legend='False')
+# %%

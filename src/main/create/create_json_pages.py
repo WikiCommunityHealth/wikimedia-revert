@@ -158,6 +158,10 @@ def more_than_bot(users):
     if bot == 0:
         return False
 
+    if utenti == 0:
+        return True
+
+
     return utenti/bot > 1
  
             
@@ -253,7 +257,7 @@ def get_DataFrame():
 
 def is_bot(user):
     words = re.compile('bot', re.IGNORECASE)
-    return words.search(user)
+    return bool(words.search(user))
     
              
 
