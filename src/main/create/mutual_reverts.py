@@ -6,7 +6,7 @@ from datetime import datetime
 import json
 import re
 import os
-
+from utils import utils
 import shutil
 
 contoedit = {}
@@ -54,7 +54,7 @@ def main():
         if page_id != current_page_id:
             #calcola m sulla pagina 
             
-            pages_m[current_page] = get_M(reverts, edit_count, current_page)
+            pages_m[current_page] = utils.get_M(reverted_m, edit_count, current_page)
 
             
             #initialize new page 
@@ -64,7 +64,7 @@ def main():
 
         else:
             if rev_id == reverter_id: ##if the currect reverts the previous one
-                reverts.setdefault(user, []).append(reverted_user)
+                reverted_m.setdefault(user, []).append(reverted_user)
 
             if is_reverted == 'true':
                 reverter_id = reverter
@@ -72,35 +72,7 @@ def main():
     return pages_m
 
 # pass every time the edit count so it consider the edit count at the time of the revert
-def get_M(reverts, edit_count, page):
 
-    mutual = set()
-    biggest_couple = 0
-
-    for user, reverted in reverts.items():
-        for rev in reverted:
-            if rev in reverts.keys():
-                if user in reverts[rev]:
-                    if not is_bot(user) or not is_bot(rev):
-                        if user > rev:              
-                            mutual.add((user,rev))
-                        elif user < rev:
-                            mutual.add((rev,user))
-    m = 0
-    for couple in mutual:
-        partial = edit_count[couple[0]] * edit_count[couple[1]]
-        m += partial
-
-    m *= len(mutual)
-
-    return m
-
-def is_bot(user):
-    words = re.compile('bot', re.IGNORECASE)
-    
-    return words.search(user) 
-
-             
 
 
         

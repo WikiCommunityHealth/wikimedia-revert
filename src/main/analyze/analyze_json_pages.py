@@ -53,8 +53,8 @@ for i in range (0,i):
         m_pages.append(
         {
             'title': page['title'],
-            'M': page['M']+1,
-            'G':  page['G']+1
+            'M': page['M'],
+            'G':  page['G']
         })
 
         reverts[page['title']] = page['longest']

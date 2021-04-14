@@ -1,11 +1,13 @@
 import re
-
-def get_M(reverted_m, edit_count, page):
+#reverted_m:dict containing every user a user reverted 
+#editcount:dict
+#todo: remove the biggest 
+def get_M(reverted_m:dict, edit_count:dict, page):
 
     mutual = set()
     biggest_couple = 0
 
-    for user, reverted in reverted_m.items():
+    for user, reverted in reverted_m.items():           #for each user check if the users it reverts reverts him 
         for rev in reverted:
             if rev in reverted_m.keys():
                 if user in reverted_m[rev]:
@@ -16,7 +18,7 @@ def get_M(reverted_m, edit_count, page):
                             mutual.add((rev,user))
     m = 0
     for couple in mutual:
-        partial = edit_count[couple[0]] * edit_count[couple[1]]
+        partial = min(edit_count[couple[0]], edit_count[couple[1]])
         m += partial
 
     m *= len(mutual)
