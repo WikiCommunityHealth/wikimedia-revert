@@ -18,6 +18,7 @@ import json
 from datetime import datetime
 import numpy as np
 import pandas as pd
+from utils import utils 
 
 
 dataset_folder_pages = '/home/gandelli/dev/data/wars_json/pages/'
@@ -38,12 +39,11 @@ pagine = 0
 def main():
     inizio = datetime.now()
     print(inizio.strftime(" %H:%M:%S"))
-    read_json(dataset_folder_pages)
+    read_json(dataset_folder_pages)             # compute pages 
     print('pagine fatte', datetime.now() - inizio)
-    read_json(dataset_folder_users)
+    read_json(dataset_folder_users)             # compute users
     print('utenti fatti', datetime.now() - inizio)
     
-    #users
 
 def read_json(path):
     i = 10 # number of files in the wars folder
@@ -55,9 +55,11 @@ def read_json(path):
             line = dump_in.readline()
             if line == '{}]' or line == '':
                 continue
-            page = json.loads(line[:-2])
+            page = json.loads(line[:-2]) # it's called page but could be also an user 
             by_month(page)
-       
+
+
+# slit up by month the page
 def by_month(page):
     current_year_month = ''
     n_chain = 0
@@ -66,7 +68,9 @@ def by_month(page):
     more_than = np.zeros(10)
     chains = []
     utenti = []
+   
 
+    #use the start date of the chain to slit up by month
     for chain in page['chains']:
 
         date = datetime.strptime(chain['start'], '%Y-%m-%d %H:%M:%S.%f')
@@ -75,17 +79,21 @@ def by_month(page):
         n_rev += chain['len']
         longest = max(longest,chain['len'])
         chains.append(chain)
+         
 
+        #count the number of the chain greater than 5,7,9 
         for i in (5,7,9):
             if(chain['len'] >= i):
                 more_than[i] += 1
 
+        #
         for utente in list(chain['users']):
                 utenti.append(utente)
         
+        #at the end of the month save a line 
         if year_month != current_year_month:
             mean = round(n_rev/n_chain, 1)
-            G,involved = getG(chains)
+            G,involved = utils.getG(chains)
             
             if 'title' in page:
                 save_page(page['title'], year_month, n_chain, n_rev, mean, longest, int(more_than[5]),int(more_than[7]),int(more_than[9]), G, involved)
@@ -99,6 +107,7 @@ def by_month(page):
             longest = 0
             more_than = np.zeros(10)
             chains = []
+            # all the users a user reverted 
     
     df = pd.DataFrame(utenti)
     grouped = df.groupby([0])[0].count().reset_index(name="count").sort_values('count', ascending = False)
@@ -110,21 +119,7 @@ def save_page(title, year_month, n_chain, n_rev, mean, longest, more5, more7, mo
 def save_user(user, year_month, n_chain, n_rev, mean, longest, more5, more7, more9, G, involved):
     out_users.write(f'{user}\t {year_month}\t {n_chain}\t {n_rev}\t {mean}\t {longest}\t {more5}\t {more7}\t {more9}\t {G}\t {involved}\n')
 
-def getG(chains):
-
-    tot = 0
-    utenti = set()
-    for chain in chains:
-        a = 9999999999
-        for user in chain['users']:
-            utenti.add(user)
-            if chain['users'][user] != '':
-                a =  min(a, int(chain['users'][user])) # for every chain in a page i take the users involved and i extract the minimun revision count
-            else:
-                a = min(a, 0)
-        tot += a
-
-    return ((tot * len(utenti)), str(utenti))    
+  
 
 
 # %%

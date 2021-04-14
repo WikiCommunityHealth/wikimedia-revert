@@ -6,9 +6,8 @@ from datetime import datetime
 import json
 import re
 import os
-
 import shutil
-
+from utils import utils
 
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 output = '/home/gandelli/dev/data/wars_json/pages/'
@@ -85,8 +84,8 @@ def simple_chains():
 
             #save past page
             if(len(chains) > 0): 
-                g = getG(chains)
-                m = get_M(reverted_m, edit_count, current_page)
+                g = utils.getG(chains)
+                m = utils.get_M(reverted_m, edit_count, current_page)
                 savePage(current_page, chains, page_id, total_reverts, longest_chain, g, list(lunghezze), m)
 
                 page_chains[current_page] = chains
@@ -144,13 +143,14 @@ def finish_chain(page, chain, users, start_date, end_date, lunghezze, total_reve
         total_reverts += len(chain)
         longest_chain = max(longest_chain, len(chain))
     return total_reverts, longest_chain
+
 #true if > 50% are bots
 def more_than_bot(users):
  
     bot = 0
     utenti = 0
     for user in users:
-        if is_bot(user) :
+        if utils.is_bot(user) :
              bot += 1
         else:
              utenti += 1
@@ -161,9 +161,7 @@ def more_than_bot(users):
     if utenti == 0:
         return True
 
-
     return utenti/bot > 1
- 
             
 def is_vandalism(comment ):
     words = re.compile('vandal')
@@ -201,45 +199,6 @@ def finish_files():
         # andrebbe cancellata la virgola, uso questo trick per farlo sintatticamente corretto
         dump_out.write('{}]')
 
-def getG(chains):
-    tot = 0
-    utenti = set()
-    for chain in chains:
-        a = 9999999999
-    
-        for user in chain['users']:
-            utenti.add(user)
-            if chain['users'][user] != '':
-                a =  min(a, int(chain['users'][user])) # for every chain in a page i take the users involved and i extract the minimun revision count
-            else:
-                a = min(a, 0)
-        tot += a
-
-    return (tot * len(utenti))    
-
-def get_M(reverts, edit_count, page):
-
-    mutual = set()
-    biggest_couple = 0
-
-    for user, reverted in reverts.items():
-        for rev in reverted:
-            if rev in reverts.keys():
-                if user in reverts[rev]:
-                    if not is_bot(user) or not is_bot(rev):
-                        if user > rev:              
-                            mutual.add((user,rev))
-                        elif user < rev:
-                            mutual.add((rev,user))
-    m = 0
-    for couple in mutual:
-        partial = edit_count[couple[0]] * edit_count[couple[1]]
-        m += partial
-
-    m *= len(mutual)
-
-    return m
-
 def get_DataFrame():
 
     dump_in = bz2.open(dataset, 'r')
@@ -255,10 +214,7 @@ def get_DataFrame():
 
     return pd.DataFrame(df)
 
-def is_bot(user):
-    words = re.compile('bot', re.IGNORECASE)
-    return bool(words.search(user))
-    
+
              
 
 

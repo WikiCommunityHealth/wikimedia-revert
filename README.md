@@ -34,7 +34,8 @@ nop with reverts ns0             126569
     "n_reverts": 3, 
     "mean": 3.0, 
     "longest": 3, 
-    "G": 0, 
+    "G": 0,
+    "M": 0, 
     "lunghezze": {"3": 1}
 }
 ```

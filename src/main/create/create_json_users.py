@@ -20,6 +20,7 @@ import numpy as np
 import pandas as pd
 import os
 import shutil
+from utils import utils
 
 
 dataset_folder = '/home/gandelli/dev/data/wars_json/pages/'
@@ -54,7 +55,7 @@ def compute_users(users):
         longest = 0
         lunghezze = np.zeros(200)
 
-        g = getG(chains)
+        g = utils.getG(chains)
         for chain in chains:
             total_reverts += chain['len']
             longest = max(longest, chain['len'])
@@ -81,22 +82,6 @@ def save_user(name, chains, total_reverts, longest, g, lunghezze, n):
         dump_out.write('[')
 
     dump_out.write(json.dumps({'user': name, 'chains': chains,'n_chains' : len(chains),'n_reverts': total_reverts,'mean': mean, 'longest': longest, 'G' : g , 'lunghezze': lun})+',\n')
-
-def getG(chains):
-    tot = 0
-    utenti = set()
-    for chain in chains:
-        a = 9999999999
-    
-        for user in chain['users']:
-            utenti.add(user)
-            if chain['users'][user] != '':
-                a =  min(a, int(chain['users'][user])) # for every chain in a page i take the users involved and i extract the minimun revision count
-            else:
-                a = min(a, 0)
-        tot += a
-
-    return (tot * len(utenti))  
 
 def finish_files():
     for filename in os.listdir(output):
