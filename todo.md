@@ -23,7 +23,8 @@ colonne: 20 char
 21 user_revision_count
 22 user_seconds_since_previous_revision
 
-23 
+23 page id
+24 page historycal name
 ... cose della pagina 
 28
 

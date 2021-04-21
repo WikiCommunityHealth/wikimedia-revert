@@ -64,3 +64,17 @@ ho poi calcolato diverse metriche come
 
 - plot + file : numero di pagine con almeno una catena per ogni mese 
 - file : numero di mesi in cui una pagina ha almeno una catena 
+
+catene senza non registrati
+n revert vadalismo 
+n revert per mese per pagina 
+n revert subiti/fatti da un utente registrato/non/admin x pagina
+    reg-reg (revert da uno registrato a uno registrato) reg non admin
+    admin-reg 
+    reg-admin
+    admin-admin
+
+n mutual revert per pagina e per mese
+    reg-reg
+    admin-reg
+    admin-admin
