@@ -87,7 +87,7 @@ def simple_chains():
 
             #save past page
             if(len(chains) > 0): 
-                g = utils.getG(chains)
+                g, involved = utils.getG(chains)
                 m = utils.get_M(reverted_m, edit_count, current_page)
                 savePage(current_page, chains, page_id, n_reverts_in_chains, longest_chain, g, list(lunghezze), m, n_reverts)
 

@@ -55,7 +55,7 @@ def compute_users(users):
         longest = 0
         lunghezze = np.zeros(200)
 
-        g = utils.getG(chains)
+        g , involved = utils.getG(chains)
         for chain in chains:
             total_reverts += chain['len']
             longest = max(longest, chain['len'])
