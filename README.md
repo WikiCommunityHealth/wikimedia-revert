@@ -61,6 +61,7 @@ ho poi calcolato diverse metriche come
 - plot : numero di catene per ogni mese 
 - plot : numero di pagine raggruppate per media (arrotondata all'intero piu vicino)
 - file : numero di catene per utente 
+- file : numero di revert che (non) sono in una catena 
 ### from tsv
 
 - plot + file : numero di pagine con almeno una catena per ogni mese 

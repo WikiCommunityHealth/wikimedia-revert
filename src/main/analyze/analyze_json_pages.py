@@ -65,6 +65,12 @@ for i in range (0,i):
         
 print(datetime.now() - inizio)
 
+
+
+
+
+
+
 # %% plot  number of pages that have n as longest chain
 
 df = pd.DataFrame(reverts.items(), columns=['n_of_pages', 'longest_chain'])
