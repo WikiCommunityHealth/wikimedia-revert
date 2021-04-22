@@ -30,7 +30,8 @@ def simple_chains():
     i = 0
     #page
     chains = []
-    total_reverts = 0
+    n_reverts_in_chains = 0
+    n_reverts = 0
     longest_chain = 0
     current_page_id = 0
     current_page = ''
@@ -59,7 +60,7 @@ def simple_chains():
         if line == '' or values[28] != '0' or is_vandalism(values[4]):
             continue
 
-
+        
         #save fields from dataset
         page_name   = values[25]
         page_id     = int(values[23])
@@ -77,26 +78,29 @@ def simple_chains():
         else:
             edit_count[user] = 0
 
+        n_reverts += 1
+
         #process new page
         if page_id != current_page_id:
              
-            total_reverts, longest_chain =  finish_chain(current_page, chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain, chains)
+            n_reverts_in_chains, longest_chain =  finish_chain(current_page, chain, users, start_date, end_date, lunghezze, n_reverts_in_chains, longest_chain, chains)
 
             #save past page
             if(len(chains) > 0): 
                 g = utils.getG(chains)
                 m = utils.get_M(reverted_m, edit_count, current_page)
-                savePage(current_page, chains, page_id, total_reverts, longest_chain, g, list(lunghezze), m)
+                savePage(current_page, chains, page_id, n_reverts_in_chains, longest_chain, g, list(lunghezze), m, n_reverts)
 
                 page_chains[current_page] = chains
-                stats[current_page] = (total_reverts/len(chains) , longest_chain, g)
+                stats[current_page] = (n_reverts_in_chains/len(chains) , longest_chain, g)
 
             #initialize 
             #page
             current_page_id = page_id
             current_page = page_name
             chains = []
-            total_reverts = 0
+            n_reverts_in_chains = 0
+            n_reverts = 0
             longest_chain = 0
             lunghezze = np.zeros(200)
             reverted_m = {}
@@ -117,7 +121,7 @@ def simple_chains():
             #finish the chain
             else:      
                 
-                total_reverts, longest_chain = finish_chain(current_page, chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain, chains)
+                n_reverts_in_chains, longest_chain = finish_chain(current_page, chain, users, start_date, end_date, lunghezze, n_reverts_in_chains, longest_chain, chains) 
                     
                 #initialize
                 chain = [rev_id]
@@ -134,15 +138,15 @@ def simple_chains():
     finish_files()
     return (page_chains, stats)
 
-def finish_chain(page, chain, users, start_date, end_date, lunghezze, total_reverts, longest_chain,chains):
+def finish_chain(page:str, chain:list , users: dict, start_date: str, end_date: str , lunghezze, n_reverts_in_chains: int, longest_chain: int,chains:list):
 
     if len(chain) > 2 and len(users) > 1 and not more_than_bot(users):
         chains.append({'page':page, 'revisions': chain, 'users' : users, 'len': len(chain), 'start': start_date, 'end': end_date})
         #compute page metrics
         lunghezze[len(chain)] +=1 # numbero of chains == n
-        total_reverts += len(chain)
+        n_reverts_in_chains += len(chain)
         longest_chain = max(longest_chain, len(chain))
-    return total_reverts, longest_chain
+    return n_reverts_in_chains, longest_chain
 
 #true if > 50% are bots
 def more_than_bot(users):
@@ -170,7 +174,7 @@ def is_vandalism(comment ):
     else:
         return False
 
-def savePage(title, chains, id, total_reverts, longest, g, lunghezze,m):
+def savePage(title, chains, id, n_reverts_in_chains, longest, g, lunghezze,m, n_reverts):
     #print('salvo la pagina', title)
     n_files = 10
     path = f"{output}wars_{ id % n_files}.json"
@@ -185,10 +189,9 @@ def savePage(title, chains, id, total_reverts, longest, g, lunghezze,m):
     if filesize == 0:
         dump_out.write('[')
 
-
-    mean = round(total_reverts/len(chains), 1)
+    mean = round(n_reverts_in_chains/len(chains), 1)
     
-    dump_out.write(json.dumps({'title': title, 'chains': chains,'n_chains' : len(chains),'n_reverts': total_reverts,'mean': mean,
+    dump_out.write(json.dumps({'title': title, 'chains': chains,'n_chains' : len(chains),'n_reverts_in_chains': n_reverts_in_chains,'n_reverts': n_reverts,'mean': mean,
                                'longest': longest, 'G' : g ,'M': m , 'lunghezze': lun})+',\n')
     dump_out.close()
 

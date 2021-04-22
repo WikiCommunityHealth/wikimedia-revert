@@ -22,7 +22,6 @@ def get_M(reverted_m:dict, edit_count:dict, page):
         m += partial
 
     m *= len(mutual)
-    print(mutual)
     return m
 
 def getG(chains):

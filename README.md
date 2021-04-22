@@ -31,7 +31,8 @@ nop with reverts ns0             126569
         "end": "2020-06-15 22:17:38.0"
     }], 
     "n_chains": 1, 
-    "n_reverts": 3, 
+    "n_reverts_in_chains": 3, 
+    "n_reverts": 38
     "mean": 3.0, 
     "longest": 3, 
     "G": 0,

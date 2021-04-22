@@ -38,7 +38,8 @@ utenti = []
 
 
 
-m_pages = []
+m_pages_df = []
+reverts_df = []
 
 for i in range (0,i):
     dump_in = open(f"{dataset_folder}wars_{i}.json")
@@ -47,14 +48,12 @@ for i in range (0,i):
         line = dump_in.readline()
         if line == '{}]' or line == '':
             continue
+
         page = json.loads(line[:-2])
 
-        m_pages.append(
-        {
-            'title': page['title'],
-            'M': page['M'],
-            'G':  page['G']
-        })
+        m_pages_df.append({ 'title': page['title'], 'M': page['M'], 'G':  page['G']})
+        reverts_df.append((page['title'], page['n_reverts'],page['n_reverts_in_chains']))
+
 
         reverts[page['title']] = page['longest']
         for chain in page['chains']:
@@ -114,10 +113,17 @@ grouped = df.groupby([0])[0].count().reset_index(name="count").sort_values('coun
 grouped.to_csv(output_folder + 'n_chain_joined.tsv', sep="\t", quoting=csv.QUOTE_NONE)
 
 
-#%%
+#%% compare m and g
 
 #sorted_m_pages = sorted(m_pages, key=lambda k: k['M'], reverse=True)
-df = pd.DataFrame(m_pages, columns=['title', 'M','G'])
+df = pd.DataFrame(m_pages_df, columns=['title', 'M','G'])
 df['rapporto'] = df['M'] /df['G']
 #df[0:30].plot.bar(figsize=(15,5), logy = True, legend='False')
+
+
+# %% number of reverts that are and aren't in a chain  
+reverts_df = pd.DataFrame(reverts_df, columns=['title', 'n_reverts', 'n_reverts_in_chains'])
+reverts_df['rapporto'] = reverts_df['n_reverts_in_chains'] / reverts_df['n_reverts']
+mean_rapporto = reverts_df['n_reverts_in_chains'].sum()/reverts_df['n_reverts'].sum()
+
 # %%
