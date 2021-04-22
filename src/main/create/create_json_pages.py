@@ -11,6 +11,7 @@ from utils import utils
 
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 output = '/home/gandelli/dev/data/wars_json/pages/'
+output_no_anon = '/home/gandelli/dev/data/wars_json/pages_no_anon/'
 #out_pages = '/home/gandelli/dev/data/pages.txt'
 
 # l'ultima colonna è fals invece che false
@@ -19,7 +20,7 @@ output = '/home/gandelli/dev/data/wars_json/pages/'
 # %% functions
 
 #works
-def simple_chains():
+def simple_chains(anon = False):
     # dump_in = open(dataset, 'r')# for uncompressed
     dump_in = bz2.open(dataset, 'r')
     line = dump_in.readline()
@@ -57,8 +58,11 @@ def simple_chains():
         values = line.split('\t')
 
         # i want only namespace 0 and no vandalism
-        if line == '' or values[28] != '0' or is_vandalism(values[4]):
+        if line == '' or values[28] != '0' or utils.is_vandalism(values[4]):
             continue
+        if anon:
+            if values[17] == 'true':
+                continue
 
         
         #save fields from dataset
@@ -89,7 +93,7 @@ def simple_chains():
             if(len(chains) > 0): 
                 g, involved = utils.getG(chains)
                 m = utils.get_M(reverted_m, edit_count, current_page)
-                savePage(current_page, chains, page_id, n_reverts_in_chains, longest_chain, g, list(lunghezze), m, n_reverts)
+                savePage(current_page, chains, page_id, n_reverts_in_chains, longest_chain, g, list(lunghezze), m, n_reverts, anon)
 
                 page_chains[current_page] = chains
                 stats[current_page] = (n_reverts_in_chains/len(chains) , longest_chain, g)
@@ -138,6 +142,8 @@ def simple_chains():
     finish_files()
     return (page_chains, stats)
 
+
+
 def finish_chain(page:str, chain:list , users: dict, start_date: str, end_date: str , lunghezze, n_reverts_in_chains: int, longest_chain: int,chains:list):
 
     if len(chain) > 2 and len(users) > 1 and not more_than_bot(users):
@@ -167,17 +173,19 @@ def more_than_bot(users):
 
     return utenti/bot > 1
             
-def is_vandalism(comment ):
-    words = re.compile('vandal')
-    if words.search(comment) :
-        return True
-    else:
-        return False
 
-def savePage(title, chains, id, n_reverts_in_chains, longest, g, lunghezze,m, n_reverts):
+
+def savePage(title, chains, id, n_reverts_in_chains, longest, g, lunghezze,m, n_reverts, anon):
     #print('salvo la pagina', title)
+
+
     n_files = 10
-    path = f"{output}wars_{ id % n_files}.json"
+    if anon:
+        path = f"{output_no_anon}wars_{ id % n_files}.json"
+    else:
+        path = f"{output}wars_{ id % n_files}.json"
+
+    
     lun = {}
     dump_out = open(path, 'a')
     filesize = os.path.getsize(path)
@@ -221,7 +229,7 @@ def get_DataFrame():
              
 
 
-# %% SIMPLE
+# %% SIMPLE with anon
 shutil.rmtree(output) 
 os.mkdir(output)
 inizio = datetime.now()
@@ -236,6 +244,21 @@ numero = sorted(stats.items(), key=lambda k: k[1][2], reverse=True)  # media
 
 print(datetime.now() - inizio)
 
+
+#%%simple without anon
+shutil.rmtree(output_no_anon) 
+os.mkdir(output_no_anon)
+inizio = datetime.now()
+print(inizio.strftime(" %H:%M:%S"))
+
+s_chains, stats = simple_chains(True)
+sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
+
+lunga = sorted(stats.items(), key=lambda k: k[1][1], reverse=True)  # catena piu lunga
+media = sorted(stats.items(), key=lambda k: k[1][0], reverse=True)  # media
+numero = sorted(stats.items(), key=lambda k: k[1][2], reverse=True)  # media
+
+print(datetime.now() - inizio)
 
 # %% COMPLEX 
 #inizio = datetime.now()

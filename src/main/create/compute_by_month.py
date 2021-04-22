@@ -24,8 +24,8 @@ from utils import utils
 dataset_folder_pages = '/home/gandelli/dev/data/wars_json/pages/'
 dataset_folder_users = '/home/gandelli/dev/data/wars_json/users/'
 
-output_pages = '/home/gandelli/dev/data/monthly/pages/all.tsv'
-output_users = '/home/gandelli/dev/data/monthly/users/all.tsv'
+output_pages = '/home/gandelli/dev/data/monthly/pages/chains.tsv'
+output_users = '/home/gandelli/dev/data/monthly/users/chains.tsv'
 
 out_pages = open(output_pages, 'w')
 out_pages.write('titolo\tmonth\tnchain\tnrev_chain\tmean\tlongest\tmore_than5\tmore_than7\tmore_than9\tG\tinvolved\n')
