@@ -125,5 +125,8 @@ df['rapporto'] = df['M'] /df['G']
 reverts_df = pd.DataFrame(reverts_df, columns=['title', 'n_reverts', 'n_reverts_in_chains'])
 reverts_df['rapporto'] = reverts_df['n_reverts_in_chains'] / reverts_df['n_reverts']
 mean_rapporto = reverts_df['n_reverts_in_chains'].sum()/reverts_df['n_reverts'].sum()
+reverts_df = reverts_df.sort_values('rapporto', ascending=False)
+reverts_df.to_csv(output_folder + 'reverts_chain.tsv', sep="\t", quoting=csv.QUOTE_NONE)
+
 
 # %%
