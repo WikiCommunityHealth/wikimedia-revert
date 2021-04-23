@@ -73,9 +73,10 @@ ho poi calcolato diverse metriche come
 ## in progress 
 n revert vandalismo ( guardo se nel commento sta scritto vandal)
 n revert per mese per pagina 
+catene senza non registrati
 
 ## todo davvero
-catene senza non registrati
+
 n revert subiti/fatti da un utente registrato/non/admin x pagina
     reg-reg (revert da uno registrato a uno registrato) reg non admin
     admin-reg 
