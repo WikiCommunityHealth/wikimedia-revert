@@ -72,7 +72,7 @@ ho poi calcolato diverse metriche come
 
 ## in progress 
 n revert vandalismo ( guardo se nel commento sta scritto vandal)
-n revert per mese per pagina 
+n revert per mese per pagina !!togliere carlo
 catene senza non registrati
 
 ## todo davvero

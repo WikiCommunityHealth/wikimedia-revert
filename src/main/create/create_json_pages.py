@@ -139,7 +139,7 @@ def simple_chains(anon = False):
                 reverted_user = user
     #pages_chains.write(list(page_chains))
 
-    finish_files()
+    finish_files(anon)
     return (page_chains, stats)
 
 
@@ -203,8 +203,12 @@ def savePage(title, chains, id, n_reverts_in_chains, longest, g, lunghezze,m, n_
                                'longest': longest, 'G' : g ,'M': m , 'lunghezze': lun})+',\n')
     dump_out.close()
 
-def finish_files():
-    for filename in os.listdir(output):
+def finish_files(anon):
+    if anon:
+        path = output_no_anon
+    else:
+        path = output
+    for filename in os.listdir(path):
         print(filename)
         dump_out = open(output+filename, 'a')
         # andrebbe cancellata la virgola, uso questo trick per farlo sintatticamente corretto

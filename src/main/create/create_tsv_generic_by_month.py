@@ -12,6 +12,7 @@ output_file = '/home/gandelli/dev/data/monthly/pages/reverts.tsv'
 
 dump_in = bz2.open(dataset, 'r')
 output = open(output_file, "w")
+output.write('title\tpageid\tyear_month\tnrev\tnrev_vandalism')
 line = dump_in.readline()
 
 current_yearmonth = 'carlo'
