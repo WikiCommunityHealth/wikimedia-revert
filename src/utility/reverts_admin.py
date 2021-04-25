@@ -106,24 +106,18 @@ dump_in.close()
 
 print(datetime.now() - inizio)
 
-print('reg vs reg',n_adm_adm +n_adm_reg +n_reg_adm +n_reg_reg )
-print('reg vs not',  n_not_reg)
 
 
 
 # %%
 def process_page(page_name, adm_adm, adm_reg, reg_adm, reg_reg , not_reg, page_id ):
-        reg = adm_adm+ adm_reg+ reg_adm+ reg_reg + not_reg
-        dump_out.write(f'{page_id}\t {page_name}\t {adm_adm}\t {adm_reg}\t {reg_adm}\t {reg_reg}\t {not_reg}\t {reg}\n')
-        print('anon = ', not_reg, 'registered=',adm_adm +adm_reg +reg_adm +reg_reg )
-        # print('adm vs adm', adm_adm )
-        # print('adm vs reg', adm_reg )
-        # print('reg vs adm', reg_adm)
-        # print('reg vs reg', reg_reg)
+    reg = adm_adm+ adm_reg+ reg_adm+ reg_reg
+    if page_name == 'Toscana':
+        print(f'{page_id}\t {page_name}\t {adm_adm}\t {adm_reg}\t {reg_adm}\t {reg_reg}\t {not_reg}\t {reg}\n')
+    
+    dump_out.write(f'{page_id}\t{page_name}\t{adm_adm}\t{adm_reg}\t{reg_adm}\t{reg_reg}\t{not_reg}\t{reg}\n')
 
 
-
-# %%
 def is_admin(groups):
     words = re.compile('sysop')
     return bool(words.search(groups))
@@ -134,3 +128,10 @@ def to_bool(value):
         return True
     else:
         return False 
+
+# %% mi da problemi perchè non posso fare df[df['page_name'] == 'Toscana'
+import pandas as pd
+folder = '/home/gandelli/dev/data/pages_data/'
+df = pd.read_csv(folder + 'reverts_admin.tsv', sep='\t')
+df
+no # %%
