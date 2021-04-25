@@ -48,7 +48,16 @@ def is_bot(user):
 
 def is_vandalism(comment):
     words = re.compile('vandal')
-    if words.search(comment) :
+    return bool(words.search(comment))
+
+
+def is_admin(groups):
+    words = re.compile('sysop')
+    return bool(words.search(groups))
+
+
+def to_bool(value):
+    if value == 'true':
         return True
     else:
-        return False
+        return False 

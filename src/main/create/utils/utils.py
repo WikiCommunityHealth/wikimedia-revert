@@ -52,3 +52,14 @@ def is_vandalism(comment):
         return True
     else:
         return False
+
+def is_admin(groups):
+    words = re.compile('sysop')
+    return bool(words.search(groups))
+
+
+def to_bool(value):
+    if value == 'true':
+        return True
+    else:
+        return False 

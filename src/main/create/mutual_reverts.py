@@ -188,7 +188,7 @@ def page_monthly():
             edit_count[username] = 0
         
     
-        
+        #current page finished 
         if current_page_id != page_id:
             process_page(revertors, editor, current_page_id, edit_count)
 
