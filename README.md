@@ -75,13 +75,13 @@ n revert vandalismo ( guardo se nel commento sta scritto vandal)
 n revert per mese per pagina !!togliere carlo
 catene senza non registrati
 
-## todo davvero
-
 n revert subiti/fatti da un utente registrato/non/admin x pagina
     reg-reg (revert da uno registrato a uno registrato) reg non admin
     admin-reg 
     reg-admin
     admin-admin
+
+## todo davvero
 
 n mutual revert per pagina e per mese
     reg-reg

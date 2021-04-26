@@ -7,8 +7,8 @@ from utils import utils
 import re
 
 
-#dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
-dataset = '/home/gandelli/dev/data/test/toscana_sorted.tsv.bz2'
+dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
+#dataset = '/home/gandelli/dev/data/test/toscana_sorted.tsv.bz2'
 output = '/home/gandelli/dev/data/pages_data/reverts_admin.tsv'
 
 dump_out = open(output, 'w')
@@ -134,4 +134,4 @@ import pandas as pd
 folder = '/home/gandelli/dev/data/pages_data/'
 df = pd.read_csv(folder + 'reverts_admin.tsv', sep='\t')
 df
-no # %%
+ # %%
