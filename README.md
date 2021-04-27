@@ -18,7 +18,7 @@ nop with reverts ns0             126569
 2) create_json  : wars -> json file which contains info about chains (json)
 3) compute_by_month: json -> tsv which contains stats per page by month (monthly/pages/all.tsv) -> tsv stats per user by month (monthly/users/all.tsv)
 
-## json 
+## json chains pages
 ```
 {
     "title": "Loligo_vulgaris", 
@@ -40,17 +40,36 @@ nop with reverts ns0             126569
     "lunghezze": {"3": 1}
 }
 ```
+## json chains users
+same as json chains users but the title is the username and without M
 
-## monthly wars
+## tsv chains by month
 
 ### structure 
 ```
-title    year_month    nchain    nrev    mean    longest     more_than5      more_than7      more_than9      G
+title    year_month    nchain   nrev    mean    longest     more_than5      more_than7      more_than9      G
 ```
 ### info
 I use the start date of a chain for classification 
 
 G is a metric that's similar to M which evalue the chains in a page, when in a chain are involved users with a big edit count G will be bigger
+
+
+## tsv reverts admin
+**adm_adm** refert to the number of reverts an admin made to another admin 
+**reg** refer to the number of revert made by registered user (admin included)
+
+```
+page_id     page_name    adm_adm    adm_reg     reg_adm     reg_reg     not_reg     reg
+```
+
+## tsv reverts by month 
+simple metrics about reverts and vandalism by month for each page 
+
+```
+title       pageid    year_month     nrev      nrev_vandalism
+```
+
 
 ## done 
 dai json ho estratto i dati e creato un tsv con i dati separati per mese come sopra specificato 
