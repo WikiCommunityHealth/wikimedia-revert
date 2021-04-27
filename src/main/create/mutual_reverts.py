@@ -78,8 +78,7 @@ def main():
 # pass every time the edit count so it consider the edit count at the time of the revert
 
 
-
-        
+  
 # %%
 inizio = datetime.now()
 print(inizio.strftime(" %H:%M:%S"))
