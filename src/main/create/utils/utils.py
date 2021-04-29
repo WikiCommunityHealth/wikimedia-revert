@@ -4,6 +4,16 @@ import re
 #todo: remove the biggest 
 def get_M(reverted_m:dict, edit_count:dict, page):
 
+    mutual = get_mutual(reverted_m, edit_count)
+    m = 0
+    for couple in mutual:
+        partial = min(edit_count[couple[0]], edit_count[couple[1]])
+        m += partial
+
+    m *= len(mutual)
+    return m
+
+def get_mutual(reverted_m:dict, edit_count:dict):
     mutual = set()
     biggest_couple = 0
 
@@ -16,13 +26,7 @@ def get_M(reverted_m:dict, edit_count:dict, page):
                             mutual.add((user,rev))
                         elif user < rev:
                             mutual.add((rev,user))
-    m = 0
-    for couple in mutual:
-        partial = min(edit_count[couple[0]], edit_count[couple[1]])
-        m += partial
-
-    m *= len(mutual)
-    return m
+    return mutual
 
 def getG(chains):
 

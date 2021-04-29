@@ -154,6 +154,7 @@ def page_monthly():
     edit_count = {}
 
     current_page_id = 0
+    current_page = ''
 
     while line != '':
         line = dump_in.readline().rstrip().decode('utf-8')[:-1]
@@ -176,9 +177,7 @@ def page_monthly():
         page_name = values[24]
         user_edit_count = values[21]
 
-        if page_id == '2829':
-            print(values[23], 'e ', values[24])
-            print(values[24], values[52])
+        
 
         #edit count
         if user_edit_count != '':
@@ -189,11 +188,14 @@ def page_monthly():
     
         #current page finished 
         if current_page_id != page_id:
+
             process_page(revertors, editor, current_page_id, edit_count)
+
 
             revertors = {}
             editor = {}
             current_page_id = page_id
+            current_page = page_name
         
 
         if is_reverted == 'true':
@@ -204,20 +206,27 @@ def page_monthly():
 
 
 
-
+errori = 0
+giusti = 0
     
 
 def process_page(revertors, editor, page_id, edit_count):
-    print('processo page'+str(page_id))
-    print(revertors)
-    print(editor)
-
+    #print('processo page'+str(page_id))
+    #print(revertors)
+    #print(editor)
+    global errori
+    global giusti
+    
     reverted_m = {}
-
+  
     for user, reverters in revertors.items():
         for reverter in reverters:
-            reverted_m.setdefault(user, []).append(editor[reverter])
-    
+            try:
+                reverted_m.setdefault(user, []).append(editor[reverter])
+            except:
+                errori +=1
+    mutual = utils.get_mutual(reverted_m, edit_count)
+    print(mutual)
     #m = utils.get_M(reverted_m, edit_count, page_id)
     #print(m)
     #return m
@@ -235,4 +244,12 @@ rev = {'85.20.122.240': ['1725921'],
 editor = {'1725921': 'Civvi', '5038831': 'Rojelio', '5319592': 'Dario vet', '7450483': 'Brownout', '16596678': 'DarkAp89~itwiki', '18787901': 'Manutius', '21099895': 'Melos', '22142782': 'Tia solzago', '22142923': 'Sbazzone', '25393435': '.mau.', '27004467': '151.20.234.243', '29431708': 'Gac', '29991424': '213.149.223.21', '30139169': '.mau.', '30585002': '.mau.', '30915646': 'Guidomac', '31190955': 'HRoestBot', '31377653': 'Xqbot', '35319405': 'Taueres', '35319437': 'Taueres', '37304914': 'Sbisolo', '37322775': 'YukioSanjo', '38793586': 'L736E', '44925977': 'Frigotoni', '46100929': 'Ignlig', '48516081': 'Petrik Schleck', '48516136': 'Vituzzu', '50176195': 'Dega180', '54133754': 'Johnlong', '58730798': 'Madaki', '63718677': 'Bradipo Lento', '67501889': 'Ary29', '69530575': '80.117.222.124', '70785438': 'Phantomas', '71011603': 'Phantomas', '79368116': 'Bellatrovata', '79368217': '5.170.198.233', '79368236': 'Bellatrovata', '79368249': '5.170.198.233', '79368272': 'Bellatrovata', '79368333': '5.170.198.233', '79368352': 'Bellatrovata', '79368360': '5.170.198.233', '79368383': 'Bellatrovata', '79368390': '5.170.198.233', '79368403': 'Bellatrovata', '79368417': '5.170.198.233', '79368448': 'Bellatrovata', '79368536': '5.170.198.233', '79368574': 'Bellatrovata', '79368585': '5.170.198.233', '79368611': 'Bellatrovata', '79368771': '5.170.198.233', '79368789': 'Bellatrovata', '79368855': '5.170.196.16', '79368962': 'Bellatrovata', '79373845': 'Pequod76'}
 
 fine = {'85.20.122.240': ['Civvi'], '84.163.75.174': ['Rojelio'], '87.139.125.203': ['Dario vet'], '84.227.188.19': ['Brownout'], '82.53.146.4': ['DarkAp89~itwiki'], '83.225.245.75': ['Manutius'], '87.25.172.60': ['Melos'], '79.39.123.36': ['Tia solzago', 'Sbazzone'], '79.22.32.108': ['.mau.', '.mau.'], '82.57.149.34': ['151.20.234.243'], '93.146.198.6': ['Gac'], '81.74.114.109': ['213.149.223.21', '213.149.223.21'], '79.51.244.104': ['.mau.'], '79.51.243.35': ['.mau.'], '151.64.34.233': ['.mau.'], '77.240.231.182': ['Guidomac'], 'Xqbot': ['HRoestBot'], 'ArthurBot': ['Xqbot'], '84.227.113.192': ['Taueres', 'Taueres'], '79.51.9.70': ['Sbisolo'], '62.210.154.242': ['YukioSanjo'], '151.64.90.72': ['L736E', 'L736E'], '79.47.31.54': ['Frigotoni'], '77.29.112.22': ['Ignlig', 'Ignlig'], '79.10.235.130': ['Petrik Schleck', 'Vituzzu'], '93.38.170.184': ['Dega180'], '151.51.190.206': ['Johnlong'], '188.218.214.160': ['Madaki'], '93.46.196.188': ['Bradipo Lento'], 'Bruna dalla vecchia': ['Ary29'], '80.117.222.124': ['80.117.222.124'], '88.46.239.43': ['Phantomas', 'Phantomas'], '5.170.198.233': ['Bellatrovata', 'Bellatrovata', 'Bellatrovata', 'Bellatrovata', 'Bellatrovata', 'Bellatrovata', 'Bellatrovata', 'Bellatrovata', 'Bellatrovata', 'Bellatrovata'], 'Bellatrovata': ['5.170.198.233', '5.170.198.233', '5.170.198.233', '5.170.198.233', '5.170.198.233', '5.170.198.233', '5.170.198.233', '5.170.198.233', '5.170.198.233', '5.170.196.16'], '93.34.234.148': ['Bellatrovata']}
+# %%
+
+inizio = datetime.now()
+print(inizio.strftime(" %H:%M:%S"))
+
+page_monthly()
+
+print(datetime.now() - inizio)
 # %%
