@@ -10,6 +10,7 @@ import shutil
 from utils import utils
 
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
+
 output = '/home/gandelli/dev/data/wars_json/pages/'
 output_no_anon = '/home/gandelli/dev/data/wars_json/pages_no_anon/'
 #out_pages = '/home/gandelli/dev/data/pages.txt'
@@ -142,8 +143,6 @@ def simple_chains(anon = False):
     finish_files(anon)
     return (page_chains, stats)
 
-
-
 def finish_chain(page:str, chain:list , users: dict, start_date: str, end_date: str , lunghezze, n_reverts_in_chains: int, longest_chain: int,chains:list):
 
     if len(chain) > 2 and len(users) > 1 and not more_than_bot(users):
@@ -173,8 +172,6 @@ def more_than_bot(users):
 
     return utenti/bot > 1
             
-
-
 def savePage(title, chains, id, n_reverts_in_chains, longest, g, lunghezze,m, n_reverts, anon):
     #print('salvo la pagina', title)
 
@@ -230,10 +227,10 @@ def get_DataFrame():
     return pd.DataFrame(df)
 
 
-             
 
 
-# %% SIMPLE with anon
+
+# %% SIMPLE with anonymous users
 shutil.rmtree(output) 
 os.mkdir(output)
 inizio = datetime.now()
@@ -249,7 +246,7 @@ numero = sorted(stats.items(), key=lambda k: k[1][2], reverse=True)  # media
 print(datetime.now() - inizio)
 
 
-#%%simple without anon
+#%%simple without anonymous users
 shutil.rmtree(output_no_anon) 
 os.mkdir(output_no_anon)
 inizio = datetime.now()

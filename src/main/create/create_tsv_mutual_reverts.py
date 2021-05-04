@@ -1,4 +1,4 @@
-#%%
+#%% create a tsv file from the filtered dataset with metrics about mutual reverts (admin, reg)
 import bz2
 import pandas as pd
 import numpy as np
@@ -17,20 +17,13 @@ output = '/home/gandelli/dev/data/pages_data/mutual_reverts_admin.tsv'
 output_monthly = '/home/gandelli/dev/data/monthly/pages/mutual.tsv'
 
 
-
-
-
-# %% functions
 dump_out = open(output, 'w')
-dump_out.write('page_id\tpage_name\tadm_adm\tadm_reg\treg_reg\tnot_reg\treg\n')
 
 dump_out_monthly = open(output_monthly, 'w')
-dump_out_monthly.write('page_id\tpage_name\tyear_month\tadm_adm\tadm_reg\treg_reg\tnot_reg\treg\n')
 
 errori = 0
 
-#bisogna levare i bot 
-#alcuni simboli non conta tutti gli edit 
+#%% functions
 def mutual():
     dump_in = bz2.open(dataset, 'r')
     line = dump_in.readline()
@@ -42,6 +35,9 @@ def mutual():
     groups = {}
     current_page_id = 0
     current_page = ''
+
+    dump_out.write('page_id\tpage_name\tadm_adm\tadm_reg\treg_reg\tnot_reg\treg\n')
+
     
 
     while line != '':
@@ -118,6 +114,9 @@ def mutual_monthly():
     current_page = ''
     current_year_month = ''
     
+    # se in futuro non funzionerà è colpa di questo
+    dump_out_monthly.write('page_id\tpage_name\tyear_month\tadm_adm\tadm_reg\treg_reg\tnot_reg\treg\n') 
+
 
     while line != '':
         line = dump_in.readline().rstrip().decode('utf-8')[:-1]
@@ -184,6 +183,7 @@ def mutual_monthly():
         if is_reverter:
             editor[revision_id] = username
 
+#return values about the number of mutual reverts that involves admin vs admin etc
 def process_page(revertors, editor, page_id, edit_count, groups, page_name):
     global errori
     
@@ -247,17 +247,17 @@ def save_page_month(page_name, adm_adm, adm_reg, reg_reg , n_not_reg, page_id , 
 
 
 # %%
-# %%
+# %% mutual 
 
 inizio = datetime.now()
 print(inizio.strftime(" %H:%M:%S"))
 
-#mutual()
+mutual()
 
 print(datetime.now() - inizio)
 
 
-# %%
+# %% mutual per mese 
 inizio = datetime.now()
 print(inizio.strftime(" %H:%M:%S"))
 

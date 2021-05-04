@@ -1,5 +1,7 @@
 
-#%%
+#%% from json pages and users compute monthly metrics about chains
+
+
 # PAGE EXAMPLE
 # {'title': 'Zuppa_di_pesce_(film)',
 #  'chains': [{'revisions': ['95861493', '95861612', '95973728'],

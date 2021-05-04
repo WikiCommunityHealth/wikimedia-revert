@@ -28,7 +28,7 @@ output = '/home/gandelli/dev/data/wars_json/users/'
 
 
 
-#%%
+#%% get users from the json page 
 def get_users():
     users = {}
 
@@ -47,6 +47,7 @@ def get_users():
     
     return users
 
+# input a dict of users with the chains joined
 def compute_users(users):
     i = 0
     for user,chains in users.items():

@@ -100,14 +100,14 @@ n revert subiti/fatti da un utente registrato/non/admin x pagina
     reg-admin
     admin-admin
 
-## todo davvero
-
 n mutual revert per pagina e per mese
     reg-reg
     admin-reg
     admin-admin
+## todo davvero
 
-togliere revert in mezzo 1 reverter 1 revert 
+
+
 mutual revert guarda di volta in volta 
 
 fare per utente quanti revertha fatto agli altri 

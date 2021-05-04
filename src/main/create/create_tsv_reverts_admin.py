@@ -1,4 +1,4 @@
-#%% from all the dataset extract the raw rows that respect some conditions
+#%% info about reverts made in a page (adm, reg)
 import bz2
 import subprocess
 import os
@@ -8,7 +8,6 @@ import re
 
 
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
-#dataset = '/home/gandelli/dev/data/test/toscana_sorted.tsv.bz2'
 output = '/home/gandelli/dev/data/pages_data/reverts_admin.tsv'
 
 dump_out = open(output, 'w')
@@ -129,7 +128,7 @@ def to_bool(value):
     else:
         return False 
 
-# %% mi da problemi perchè non posso fare df[df['page_name'] == 'Toscana'
+# %% 
 import pandas as pd
 folder = '/home/gandelli/dev/data/pages_data/'
 df = pd.read_csv(folder + 'reverts_admin.tsv', sep='\t')

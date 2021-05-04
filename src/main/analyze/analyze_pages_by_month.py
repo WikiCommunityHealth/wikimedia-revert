@@ -9,7 +9,7 @@ folder = '/home/gandelli/dev/data/monthly/pages/'
 
 df_rev = pd.read_csv(folder + 'reverts.tsv', sep='\t')
 df = pd.read_csv(folder + 'chains.tsv', sep='\t')
-df['month'] =pd.to_datetime(df.month)
+df['month'] = pd.to_datetime(df.month)
 
 
 #CHAINS
