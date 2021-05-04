@@ -106,3 +106,12 @@ n mutual revert per pagina e per mese
     reg-reg
     admin-reg
     admin-admin
+
+togliere revert in mezzo 1 reverter 1 revert 
+mutual revert guarda di volta in volta 
+
+fare per utente quanti revertha fatto agli altri 
+
+3 revert rule ( max 3 revert in 1 pag in 24 h)
+
+usare parent id per simplechain

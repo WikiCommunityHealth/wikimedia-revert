@@ -6,6 +6,7 @@ from calendar import month_abbr
 
 folder = '/home/gandelli/dev/data/pages_data/'
 file = 'reverts_admin.tsv'
+mutual = 'mutual_reverts_admin.tsv'
 
 
 df = pd.read_csv(folder + file, sep='\t')
@@ -28,3 +29,10 @@ df.sort_values('adm_adm', ascending=False)[:20]
 labels = ['0', '1', '2-4', '5-9', '10-99', '100-9999']
 bins = pd.cut(df['total_reverts'], [0,1,2,5, 10, 100, 10000], right=False, labels = labels)
 df.groupby(bins)['total_reverts'].agg(['count', 'sum'])
+
+
+#%% m
+
+df = pd.read_csv(folder + mutual, sep='\t')
+
+# %%
