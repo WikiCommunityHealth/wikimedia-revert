@@ -115,3 +115,5 @@ fare per utente quanti revertha fatto agli altri
 3 revert rule ( max 3 revert in 1 pag in 24 h)
 
 usare parent id per simplechain
+
+le date è meglio salvarle come 01 e non 1 per sort

@@ -126,7 +126,6 @@ def mutual_monthly():
         # i want only namespace 0 and no vandalism
         if line == '' or values[28] != '0':
             continue
-        #print(line)
         
         #parse from dataset
         revision_id = values[52]
@@ -176,7 +175,7 @@ def mutual_monthly():
         
    
         if is_reverted:
-            if reverter_id not in rev_id_dict:
+            if reverter_id not in rev_id_dict: # this prevents the multiple count of a revert 
                 revertors.setdefault(username, []).append(reverter_id)
                 rev_id_dict[reverter_id] = timestamp
     
@@ -187,14 +186,8 @@ def mutual_monthly():
 def process_page(revertors, editor, page_id, edit_count, groups, page_name):
     global errori
     
-    reverted_m = {}
-  
-    for user, reverters in revertors.items():
-        for reverter in reverters:
-            try:
-                reverted_m.setdefault(user, []).append(editor[reverter])
-            except:
-                errori +=1
+    reverted_m = utils.combine_editors(revertors, editor)
+
     mutual = utils.get_mutual(reverted_m, edit_count)
 
     return analyze_mutuals_groups(page_id, page_name, mutual, groups)

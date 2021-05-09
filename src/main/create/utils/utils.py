@@ -67,3 +67,13 @@ def to_bool(value):
         return True
     else:
         return False 
+
+def combine_editors(revertors, editor):
+    reverted_m = {}
+  
+    for user, reverters in revertors.items():
+        for reverter in reverters:
+            if reverter in editor and user != editor[reverter]:
+                reverted_m.setdefault(user, []).append(editor[reverter])
+
+    return reverted_m

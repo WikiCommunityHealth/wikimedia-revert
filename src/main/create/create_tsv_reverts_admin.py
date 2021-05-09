@@ -54,7 +54,7 @@ while line != '':
     reverter = values[65]
     is_reverted = to_bool((values[64]))
     
-
+    # current page is finished so i can process it 
     if page_id != current_page_id:
         process_page(current_page, n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,page_id)
 
@@ -67,6 +67,7 @@ while line != '':
         n_reg_reg = 0
         n_not_reg = 0
 
+    
     if reverter_id == rev_id:
    
         if user != reverted_user:
