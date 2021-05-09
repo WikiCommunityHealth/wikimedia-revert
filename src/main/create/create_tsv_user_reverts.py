@@ -11,10 +11,10 @@ from utils import utils
 import shutil
 
 contoedit = {}
-dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
+
 dataset_tstamp = '/home/gandelli/dev/data/it/sorted_by_timestamp.tsv.bz2'
 
-output_monthly = '/home/gandelli/dev/data/monthly/pages/mutual.tsv'
+output_monthly = '/home/gandelli/dev/data/monthly/users/reverts.tsv'
 
 dump_out_monthly = open(output_monthly, 'w')
 
@@ -25,14 +25,13 @@ def users_rev():
     rev_id_dict = {}
     revertors = {} # revertors[username] = list of revid which reverted him
     editor = {} # editor[rev_id] = user who made the edit with id rev_id
-    edit_count = {}
     groups = {}
     current_page_id = 0
     current_page = ''
     current_year_month = ''
     
     # se in futuro non funzionerà è colpa di questo
-    dump_out_monthly.write('page_id\tpage_name\tyear_month\tadm_adm\tadm_reg\treg_reg\tnot_reg\treg\n') 
+    dump_out_monthly.write('user\tgroup\tyear_month\ttot_received\tr_reg\tr_not\tr_adm\ttot_done\td_reg\td_not\td_adm\n') 
 
 
     while line != '':
@@ -59,8 +58,7 @@ def users_rev():
         timestamp = datetime.strptime(values[3],'%Y-%m-%d %H:%M:%S.%f')
         year_month = str(timestamp.year)+'-'+str(timestamp.month)
 
-        #edit count
-        edit_count[username] = int(user_edit_count) if user_edit_count != '' else 0
+
 
         #groups
         groups[username] = 'reg' if user_is_registered else 'not'
@@ -73,10 +71,8 @@ def users_rev():
         #current month finished
         if current_year_month != year_month:
             print(current_year_month )
-            print(utils.combine_editors(revertors, editor) , '\n')
-            print(groups, '\n\n')
 
-            count_reverts(revertors, editor, groups)
+            count_reverts(revertors, editor, groups, current_year_month)
 
             revertors = {}
             editor = {}
@@ -92,28 +88,60 @@ def users_rev():
         if is_reverter:
             editor[revision_id] = username
 
+    # for the last month
+    count_reverts(revertors, editor, groups, current_year_month)
+
 
 # %%
+def count_reverts(revertors, editor, group, year_month):
 
-def count_reverts(revertors, editor, groups):
     subiti = utils.combine_editors(revertors, editor)
-
-
-# %%
-def test(comb, month, group):
     
-    for uomo, reverters in comb.items():
+   #get list of users a user reverted  
+    fatti = {}
+    for reverted, reverters in subiti.items():
+        for reverter in reverters:
+            fatti.setdefault(reverter, []).append(reverted)
+
+    #count 
+    for reverted, reverters in subiti.items():
+        #subiti
         sreg = 0
         snot = 0
         sadm = 0
+        
         for reverter in reverters:
             sreg += 1 if group[reverter] == 'reg' else 0
             snot += 1 if group[reverter] == 'not' else 0
             sadm += 1 if group[reverter] == 'adm' else 0
-                
 
-        print(uomo, group[uomo], month, sreg, snot, sadm)
+        #fatti
+        freg = 0
+        fnot = 0
+        fadm = 0
+
+        if reverted in fatti:
+            for user in fatti[reverted]:
+                if user in group:
+                    freg += 1 if group[user] == 'reg' else 0
+                    fnot += 1 if group[user] == 'not' else 0
+                    fadm += 1 if group[user] == 'adm' else 0
+        try:
+            gruppo = group[reverted]
+        except:
+            gruppo = 'not'
+            print('gruppo rotto per', reverted)
+        save_user_month(reverted, gruppo, year_month, sreg, snot, sadm, freg, fnot, fadm )
+
+def save_user_month(user, group, month, sreg, snot, sadm, freg, fnot, fadm ):
+    tot_subiti = sreg + snot + sadm
+    tot_fatti = freg + fnot + fadm
+    dump_out_monthly.write(f'{user}\t{group}\t{month}\t{tot_subiti}\t{sreg}\t{snot}\t{sadm}\t{tot_fatti}\t{freg}\t{fnot}\t{fadm}\n')
 # %%
-comb = {'Danilo': ['Frieda'], '81.250.141.227': ['Frieda', 'Frieda'], 'Frieda': ['81.250.141.227'], 'Gianluigi': ['Frieda'], 'Rafaele liraz': ['Frieda'], '212.162.77.106': ['Frieda'], '194.244.68.198': ['MikyT'], '200.53.106.46': ['Alfio'], 'Alfio': ['Ayeye'], '219.150.156.3': ['Suisui'], 'Snowdog': ['Thkperson'], 'Thkperson': ['Snowdog'], '167.83.10.23': ['Frieda', 'Frieda'], '213.45.38.11': ['Svante']} 
-group = {'Twice25': 'reg', '82.84.228.70': 'not', 'Danilo': 'reg', 'Frieda': 'adm', '81.250.141.227': 'not', 'Gianluigi': 'reg', 'Rafaele liraz': 'reg', 'Renato Caniatti': 'reg', '82.84.57.181': 'not', 'Kurdt': 'reg', 'Ayeye': 'reg', '212.162.77.106': 'not', '194.244.68.198': 'not', 'MikyT': 'reg', '200.53.106.46': 'not', 'Alfio': 'reg', 'Spino': 'reg', '219.150.156.3': 'not', 'Thkperson': 'reg', 'Suisui': 'reg', 'Snowdog': 'reg', '213.23.133.224': 'not', 'Pérvasion': 'reg', '167.83.10.23': 'not', '213.45.38.11': 'not', 'Svante': 'reg', '81.116.244.202': 'not', '219.104.1.239': 'not', '151.35.68.116': 'not'}
+
+
+inizio = datetime.now()
+print(inizio.strftime(" %H:%M:%S"))
+users_rev()
+print(datetime.now() - inizio)
 # %%
