@@ -32,7 +32,7 @@ def users_rev():
     
     # se in futuro non funzionerà è colpa di questo
     dump_out_monthly.write('user\tgroup\tyear_month\ttot_received\tr_reg\tr_not\tr_adm\ttot_done\td_reg\td_not\td_adm\n') 
-
+    print('stampo header')
 
     while line != '':
         line = dump_in.readline().rstrip().decode('utf-8')[:-1]
@@ -131,7 +131,10 @@ def count_reverts(revertors, editor, group, year_month):
         except:
             gruppo = 'not'
             print('gruppo rotto per', reverted)
-        save_user_month(reverted, gruppo, year_month, sreg, snot, sadm, freg, fnot, fadm )
+        
+        # i do not want bots
+        if not utils.is_bot(reverted):
+            save_user_month(reverted, gruppo, year_month, sreg, snot, sadm, freg, fnot, fadm )
 
 def save_user_month(user, group, month, sreg, snot, sadm, freg, fnot, fadm ):
     tot_subiti = sreg + snot + sadm
