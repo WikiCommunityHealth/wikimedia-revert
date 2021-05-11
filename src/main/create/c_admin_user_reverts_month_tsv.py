@@ -13,8 +13,8 @@ import shutil
 contoedit = {}
 
 dataset_tstamp = '/home/gandelli/dev/data/it/sorted_by_timestamp.tsv.bz2'
+output_monthly = '/home/gandelli/dev/data/admin/user/reverts.tsv'
 
-output_monthly = '/home/gandelli/dev/data/monthly/users/reverts.tsv'
 
 dump_out_monthly = open(output_monthly, 'w')
 
@@ -22,25 +22,27 @@ def users_rev():
     dump_in = bz2.open(dataset_tstamp, 'r')
     line = dump_in.readline()
 
+   # se in futuro non funzionerà è colpa di questo
+    dump_out_monthly.write('user\tgroup\tyear_month\ttot_received\tr_reg\tr_not\tr_adm\ttot_done\td_reg\td_not\td_adm\n') 
+    
+
     rev_id_dict = {}
     revertors = {} # revertors[username] = list of revid which reverted him
     editor = {} # editor[rev_id] = user who made the edit with id rev_id
     groups = {}
+
     current_page_id = 0
     current_page = ''
     current_year_month = ''
     
-    # se in futuro non funzionerà è colpa di questo
-    dump_out_monthly.write('user\tgroup\tyear_month\ttot_received\tr_reg\tr_not\tr_adm\ttot_done\td_reg\td_not\td_adm\n') 
-    print('stampo header')
+  
 
     while line != '':
         line = dump_in.readline().rstrip().decode('utf-8')[:-1]
         values = line.split('\t')
 
-        
         # i want only namespace 0 and no vandalism
-        if line == '' or values[28] != '0':
+        if line == '' or values[28] != '0' or utils.is_vandalism(values[4]):
             continue
         
         #parse from dataset
@@ -62,7 +64,6 @@ def users_rev():
 
         #groups
         groups[username] = 'reg' if user_is_registered else 'not'
-        
         if utils.is_admin(user_groups):
             groups[username] = 'adm'
         
@@ -91,8 +92,6 @@ def users_rev():
     # for the last month
     count_reverts(revertors, editor, groups, current_year_month)
 
-
-# %%
 def count_reverts(revertors, editor, group, year_month):
 
     subiti = utils.combine_editors(revertors, editor)
@@ -140,9 +139,10 @@ def save_user_month(user, group, month, sreg, snot, sadm, freg, fnot, fadm ):
     tot_subiti = sreg + snot + sadm
     tot_fatti = freg + fnot + fadm
     dump_out_monthly.write(f'{user}\t{group}\t{month}\t{tot_subiti}\t{sreg}\t{snot}\t{sadm}\t{tot_fatti}\t{freg}\t{fnot}\t{fadm}\n')
+
+
+
 # %%
-
-
 inizio = datetime.now()
 print(inizio.strftime(" %H:%M:%S"))
 users_rev()

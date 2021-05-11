@@ -1,4 +1,4 @@
-#%% create a tsv file from the filtered dataset with metrics about mutual reverts (admin, reg)
+#%% 20 min create a tsv file from the filtered dataset with metrics about mutual reverts (admin, reg)
 import bz2
 import pandas as pd
 import numpy as np
@@ -13,12 +13,10 @@ contoedit = {}
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 dataset_tstamp = '/home/gandelli/dev/data/it/sorted_by_timestamp.tsv.bz2'
 
-output = '/home/gandelli/dev/data/pages_data/mutual_reverts_admin.tsv'
-output_monthly = '/home/gandelli/dev/data/monthly/pages/mutual.tsv'
-
+output = '/home/gandelli/dev/data/admin/page/mutual.tsv'
+output_monthly = '/home/gandelli/dev/data/admin/page/mutual_month.tsv'
 
 dump_out = open(output, 'w')
-
 dump_out_monthly = open(output_monthly, 'w')
 
 errori = 0
@@ -105,17 +103,19 @@ def mutual_monthly():
     dump_in = bz2.open(dataset, 'r')
     line = dump_in.readline()
 
+    # se in futuro non funzionerà è colpa di questo
+    dump_out_monthly.write('page_id\tpage_name\tyear_month\tadm_adm\tadm_reg\treg_reg\tnot_reg\treg\n') 
+
     rev_id_dict = {}
     revertors = {} # revertors[username] = list of revid which reverted him
     editor = {} # editor[rev_id] = user who made the edit with id rev_id
     edit_count = {}
     groups = {}
+
     current_page_id = 0
     current_page = ''
     current_year_month = ''
     
-    # se in futuro non funzionerà è colpa di questo
-    dump_out_monthly.write('page_id\tpage_name\tyear_month\tadm_adm\tadm_reg\treg_reg\tnot_reg\treg\n') 
 
 
     while line != '':
@@ -124,7 +124,7 @@ def mutual_monthly():
 
         
         # i want only namespace 0 and no vandalism
-        if line == '' or values[28] != '0':
+        if line == '' or values[28] != '0' or utils.is_vandalism(values[4]):
             continue
         
         #parse from dataset
@@ -158,7 +158,7 @@ def mutual_monthly():
             values = process_page(revertors, editor, current_page_id, edit_count, groups, page_name)
             save_page_month(page_name, values['n_adm_adm'], values['n_adm_reg'], values['n_reg_reg'],values['n_not_reg'], page_id, current_year_month)
 
-
+            #initialize new page
             revertors = {}
             editor = {}
             current_page_id = page_id
@@ -245,7 +245,7 @@ def save_page_month(page_name, adm_adm, adm_reg, reg_reg , n_not_reg, page_id , 
 inizio = datetime.now()
 print(inizio.strftime(" %H:%M:%S"))
 
-mutual()
+#mutual()
 
 print(datetime.now() - inizio)
 

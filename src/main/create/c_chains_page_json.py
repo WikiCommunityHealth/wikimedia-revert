@@ -11,8 +11,11 @@ from utils import utils
 
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 
-output = '/home/gandelli/dev/data/wars_json/pages/'
-output_no_anon = '/home/gandelli/dev/data/wars_json/pages_no_anon/'
+output = '/home/gandelli/dev/data/chains/page/'
+output_no_anon =  '/home/gandelli/dev/data/chains/page_reg/'
+
+
+
 #out_pages = '/home/gandelli/dev/data/pages.txt'
 
 # l'ultima colonna è fals invece che false
@@ -238,10 +241,6 @@ print(inizio.strftime(" %H:%M:%S"))
 
 s_chains, stats = simple_chains()
 sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
-
-lunga = sorted(stats.items(), key=lambda k: k[1][1], reverse=True)  # catena piu lunga
-media = sorted(stats.items(), key=lambda k: k[1][0], reverse=True)  # media
-numero = sorted(stats.items(), key=lambda k: k[1][2], reverse=True)  # media
 
 print(datetime.now() - inizio)
 

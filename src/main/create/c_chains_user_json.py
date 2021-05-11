@@ -23,8 +23,8 @@ import shutil
 from utils import utils
 
 
-dataset_folder = '/home/gandelli/dev/data/wars_json/pages/'
-output = '/home/gandelli/dev/data/wars_json/users/'
+dataset_folder = '/home/gandelli/dev/data/chains/pages/'
+output = '/home/gandelli/dev/data/chains/user/'
 
 
 

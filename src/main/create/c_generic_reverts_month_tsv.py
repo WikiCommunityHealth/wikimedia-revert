@@ -7,7 +7,7 @@ from utils import utils
 
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 
-output_file = '/home/gandelli/dev/data/monthly/pages/reverts.tsv'
+output_file = '/home/gandelli/dev/data/generic/pages/reverts.tsv'
 
 
 dump_in = bz2.open(dataset, 'r')
