@@ -1,24 +1,39 @@
 # wikimedia-revert
+On wikipedia everyone can edit a page.
 
-pip install -r requirements.txt
-
-simplechain approssimano ma abbastanza affidabili
-
-nop = number of pages
-
-nop created                     8415868
-nop > one edit                  8412779 
-nop created ns0                 3328862
-nop > one edit revisions ns0    3283713
-nop with reverts                 157743
-nop with reverts ns0             126569
+The [hystory](https://en.wikipedia.org/w/index.php?title=Volcanic_rock&action=history). of a page contains a snapshot of it for each edit 
 
 
-1) sort_dataset : tsv raw dataset -> tsv which contains revert sorted by page (wars)
-2) create_json  : wars -> json file which contains info about chains (json)
-3) compute_by_month: json -> tsv which contains stats per page by month (monthly/pages/all.tsv) -> tsv stats per user by month (monthly/users/all.tsv)
+On wikipedia everyone can delete an edit restoring the previous edit, this is a **revert**.
 
-## json chains pages
+# Dataset structure 
+
+it's a tsv, each line is an event, there are different type of events: 
+- **revision**: edit 
+- **page**: create, move, restore, etc of a page  
+- **user**: create, delete, change group (become an admin) 
+
+this is the official information page.
+
+https://wikitech.wikimedia.org/wiki/Analytics/Data_Lake/Edits/Mediawiki_history_dumps
+
+this is my information page about fields i use. 
+
+https://docs.google.com/spreadsheets/d/1oyo59K_FfGTl7C5Q96NjvnWeAbWv1ILVSdvSrF1Pz8E/edit#gid=297287992
+
+
+# created 
+from the wikimedia dataset i computed different other datasets
+
+
+```sorted_by_pages.tsv``` : same as wikimedia but only with revision events and sorted by page name
+
+## chains 
+a chain happens when the targetted edit of a revert is a revert(which could belong to a chain)
+
+for each page is saved each chain and some statistics about it 
+
+```wars_json/pages```
 ```
 {
     "title": "Loligo_vulgaris", 
@@ -40,15 +55,98 @@ nop with reverts ns0             126569
     "lunghezze": {"3": 1}
 }
 ```
+similarly, it's possibile to see every chain a user got involved 
+```wars_json/users```
+```
+{
+    "title": "Loligo_vulgaris", 
+    "chains": 
+    [{
+        "revisions": ["113715375", "113715381", "113715393"], 
+        "users": {"62.18.117.244": "", "Leo0428": "17181"}, 
+        "len": 3, 
+        "start": "2020-06-15 22:16:23.0", 
+        "end": "2020-06-15 22:17:38.0"
+    }], 
+    "n_chains": 1, 
+    "n_reverts_in_chains": 3, 
+    "n_reverts": 38
+    "mean": 3.0, 
+    "longest": 3, 
+    "G": 0,
+    "M": 0, 
+    "lunghezze": {"3": 1}
+}
+```
+from this json i computed the metric by month adding more_than and involved
+```monthly pages```
+```
+title    year_month    nchain   nrev    mean    longest     more_than5      more_than7      more_than9      G   involved
+```
+
+```monthly users```
+``` 
+user    year_month    nchain   nrev    mean    longest     more_than5      more_than7      more_than9      G    involved
+```
+
+
+## admin
+
+### pages
+
+```reverts```
+```
+page_id     page_name    adm_adm    adm_reg     reg_adm     reg_reg     not_reg     reg
+```
+
+```mutual```
+
+```
+page_id     page_name    adm_adm    adm_reg     reg_reg     not_reg     reg
+```
+
+### user
+```
+user     group    year_month    tot_received     t_reg     t_not     t_adm     tot_done     d_reg     d_not     d_adm    
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+simplechain approssimano ma abbastanza affidabili
+
+nop = number of pages
+
+nop created                     8415868
+nop > one edit                  8412779 
+nop created ns0                 3328862
+nop > one edit revisions ns0    3283713
+nop with reverts                 157743
+nop with reverts ns0             126569
+
+
+1) sort_dataset : tsv raw dataset -> tsv which contains revert sorted by page (wars)
+2) create_json  : wars -> json file which contains info about chains (json)
+3) compute_by_month: json -> tsv which contains stats per page by month (monthly/pages/all.tsv) -> tsv stats per user by month (monthly/users/all.tsv)
+
+## json chains pages
+
 ## json chains users
 same as json chains users but the title is the username and without M
 
 ## tsv chains by month
 
 ### structure 
-```
-title    year_month    nchain   nrev    mean    longest     more_than5      more_than7      more_than9      G
-```
+
 ### info
 I use the start date of a chain for classification 
 
