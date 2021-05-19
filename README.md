@@ -13,13 +13,12 @@ it's a tsv, each line is an event, there are different type of events:
 - **page**: create, move, restore, etc of a page  
 - **user**: create, delete, change group (become an admin) 
 
-this is the official information page.
+[this](https://wikitech.wikimedia.org/wiki/Analytics/Data_Lake/Edits/Mediawiki_history_dumps) is the official information page.
 
-https://wikitech.wikimedia.org/wiki/Analytics/Data_Lake/Edits/Mediawiki_history_dumps
+[this](https://docs.google.com/spreadsheets/d/1oyo59K_FfGTl7C5Q96NjvnWeAbWv1ILVSdvSrF1Pz8E/edit#gid=297287992) is my information page about fields i use. 
 
-this is my information page about fields i use. 
+[this ](https://docs.google.com/document/d/1YnV7rC6kXZIpYd8ppJLgg7ieKAlmnaOG04BDTZ8NLjA/edit#) is the google doc which contains info about metrics
 
-https://docs.google.com/spreadsheets/d/1oyo59K_FfGTl7C5Q96NjvnWeAbWv1ILVSdvSrF1Pz8E/edit#gid=297287992
 
 
 # created 

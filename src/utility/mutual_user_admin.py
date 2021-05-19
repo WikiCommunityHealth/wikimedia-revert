@@ -16,7 +16,6 @@ dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 output = '/home/gandelli/dev/data/admin/user/mutual.tsv'
 
 
-
 def mutual_monthly():
     dump_in = bz2.open(dataset, 'r')
     line = dump_in.readline()
@@ -98,8 +97,6 @@ def mutual_monthly():
             editor[revision_id] = username
 
 
-
-
 def analyze_mutuals_groups(mutual, group):
     global count_mutual
     for couple in mutual:
@@ -135,8 +132,6 @@ def analyze_mutuals_groups(mutual, group):
 
         count_mutual[couple[1]] = (a, b, c)
     
-
-
 #return values about the number of mutual reverts that involves admin vs admin etc
 def process_page(revertors, editor, page_id, edit_count, groups, page_name):
 
@@ -144,7 +139,8 @@ def process_page(revertors, editor, page_id, edit_count, groups, page_name):
     reverted_m = utils.combine_editors(revertors, editor) # merge revertors and editor 
     mutual = utils.get_mutual(reverted_m, edit_count) # get a list of tuples  
     analyze_mutuals_groups(mutual, groups)# fill a dict with the info
-    
+
+
 def save():
     global count_mutual
     dump_out = open(output, 'w')
