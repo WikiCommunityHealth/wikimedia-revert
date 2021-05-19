@@ -99,6 +99,9 @@ an user could be
 - **reg** : registered but not admin 
 - **not** : anonymous user 
 
+**adm_adm** refert to the number of reverts an admin made to another admin 
+**reg** refer to the number of revert made by registered user (admin included)
+
 NB: the last 2 fields are _not_reg_ and _reg_ , in this case reg are registered users including admins
 
 the data contains info about the reverts and the mutual reverts, a mutual reverts happens when in the same page if A reverts B then B reverts A 
@@ -136,51 +139,5 @@ user     group    year_month    tot_received     t_reg     t_not     t_adm     t
 
 
 
-
-simplechain approssimano ma abbastanza affidabili
-
-nop = number of pages
-
-nop created                     8415868
-nop > one edit                  8412779 
-nop created ns0                 3328862
-nop > one edit revisions ns0    3283713
-nop with reverts                 157743
-nop with reverts ns0             126569
-
-
-1) sort_dataset : tsv raw dataset -> tsv which contains revert sorted by page (wars)
-2) create_json  : wars -> json file which contains info about chains (json)
-3) compute_by_month: json -> tsv which contains stats per page by month (monthly/pages/all.tsv) -> tsv stats per user by month (monthly/users/all.tsv)
-
-## json chains pages
-
-## json chains users
-same as json chains users but the title is the username and without M
-
-## tsv chains by month
-
-### structure 
-
-### info
-I use the start date of a chain for classification 
-
-G is a metric that's similar to M which evalue the chains in a page, when in a chain are involved users with a big edit count G will be bigger
-
-
-## tsv reverts admin
-**adm_adm** refert to the number of reverts an admin made to another admin 
-**reg** refer to the number of revert made by registered user (admin included)
-
-```
-page_id     page_name    adm_adm    adm_reg     reg_adm     reg_reg     not_reg     reg
-```
-
-## tsv reverts by month 
-simple metrics about reverts and vandalism by month for each page 
-
-```
-title       pageid    year_month     nrev      nrev_vandalism
-```
 
 

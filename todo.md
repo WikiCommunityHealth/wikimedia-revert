@@ -48,6 +48,47 @@ colonne: 20 char
 1 2 14 15 16 19 29 30 31 35-51 55 56 60 61 62 63 68
 
 
+
+
+simplechain approssimano ma abbastanza affidabili
+
+nop = number of pages
+
+nop created                     8415868
+nop > one edit                  8412779 
+nop created ns0                 3328862
+nop > one edit revisions ns0    3283713
+nop with reverts                 157743
+nop with reverts ns0             126569
+
+
+1) sort_dataset : tsv raw dataset -> tsv which contains revert sorted by page (wars)
+2) create_json  : wars -> json file which contains info about chains (json)
+3) compute_by_month: json -> tsv which contains stats per page by month (monthly/pages/all.tsv) -> tsv stats per user by month (monthly/users/all.tsv)
+
+
+
+
+
+
+
+
+```
+
+## tsv reverts by month 
+simple metrics about reverts and vandalism by month for each page 
+
+```
+title       pageid    year_month     nrev      nrev_vandalism
+```
+
+
+
+
+
+
+
+
 ## done 
 dai json ho estratto i dati e creato un tsv con i dati separati per mese come sopra specificato 
 ho poi calcolato diverse metriche come 

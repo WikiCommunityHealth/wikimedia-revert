@@ -161,3 +161,4 @@ print(inizio.strftime(" %H:%M:%S"))
 mutual_monthly()
 print(datetime.now() - inizio)
 # %%
+
