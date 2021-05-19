@@ -1,7 +1,7 @@
 # wikimedia-revert
 On wikipedia everyone can edit a page.
 
-The [hystory](https://en.wikipedia.org/w/index.php?title=Volcanic_rock&action=history). of a page contains a snapshot of it for each edit 
+The [hystory](https://en.wikipedia.org/w/index.php?title=Volcanic_rock&action=history) of a page contains a snapshot of it for each edit 
 
 
 On wikipedia everyone can delete an edit restoring the previous edit, this is a **revert**.
@@ -59,23 +59,25 @@ similarly, it's possibile to see every chain a user got involved
 ```wars_json/users```
 ```
 {
-    "title": "Loligo_vulgaris", 
-    "chains": 
-    [{
-        "revisions": ["113715375", "113715381", "113715393"], 
-        "users": {"62.18.117.244": "", "Leo0428": "17181"}, 
-        "len": 3, 
-        "start": "2020-06-15 22:16:23.0", 
-        "end": "2020-06-15 22:17:38.0"
-    }], 
-    "n_chains": 1, 
-    "n_reverts_in_chains": 3, 
-    "n_reverts": 38
-    "mean": 3.0, 
-    "longest": 3, 
-    "G": 0,
-    "M": 0, 
-    "lunghezze": {"3": 1}
+        
+    "user": "80.181.45.118",
+    "chains": [
+        {
+            "page": "Puppy_Dog_Pals",
+            "revisions": [ "109421725", "109422928", "109422931","109465730"],
+            "users": { "80.181.45.118": "",  "Moxmarco": "10204", "Sakretsu": "75109" },
+            "len": 4,
+            "start": "2019-12-14 13: 34: 12.0",
+            "end": "2019-12-16 23: 08: 09.0"
+        }
+    ],
+    "n_chains": 1,
+    "n_reverts": 4,
+    "mean": 4,
+    "longest": 4,
+    "G": [ 0, "{'87.19.234.101', 'ValeJappo', '80.181.45.118', 'Moxmarco', 'Sakretsu'}"],
+    "lunghezze": { "3": 1 }
+    
 }
 ```
 from this json i computed the metric by month adding more_than and involved
@@ -91,6 +93,19 @@ user    year_month    nchain   nrev    mean    longest     more_than5      more_
 
 
 ## admin
+i also computed data about the group of the reverter and of the reverted.
+an user could be 
+- **adm** : sysop, administrator 
+- **reg** : registered but not admin 
+- **not** : anonymous user 
+
+NB: the last 2 fields are _not_reg_ and _reg_ , in this case reg are registered users including admins
+
+the data contains info about the reverts and the mutual reverts, a mutual reverts happens when in the same page if A reverts B then B reverts A 
+
+**M** is the controversiality metric computed by Yasseri 
+**G** is a metric that's similar to M which evalue the chains in a page(or user), when in a chain are involved users with a big edit count G will be bigger
+
 
 ### pages
 
