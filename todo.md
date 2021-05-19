@@ -48,3 +48,49 @@ colonne: 20 char
 1 2 14 15 16 19 29 30 31 35-51 55 56 60 61 62 63 68
 
 
+## done 
+dai json ho estratto i dati e creato un tsv con i dati separati per mese come sopra specificato 
+ho poi calcolato diverse metriche come 
+### from json
+
+- plot : numero di pagine raggruppate per longest_chain
+- plot : numero di catene per ogni mese 
+- plot : numero di pagine raggruppate per media (arrotondata all'intero piu vicino)
+- file : numero di catene per utente 
+- file : numero di revert che (non) sono in una catena 
+### from tsv
+
+- plot + file : numero di pagine con almeno una catena per ogni mese 
+- file : numero di mesi in cui una pagina ha almeno una catena 
+
+
+# todo
+
+## in progress 
+n revert vandalismo ( guardo se nel commento sta scritto vandal)
+n revert per mese per pagina !!togliere carlo
+catene senza non registrati
+
+n revert subiti/fatti da un utente registrato/non/admin x pagina
+    reg-reg (revert da uno registrato a uno registrato) reg non admin
+    admin-reg 
+    reg-admin
+    admin-admin
+
+n mutual revert per pagina e per mese
+    reg-reg
+    admin-reg
+    admin-admin
+## todo davvero
+
+
+
+mutual revert guarda di volta in volta 
+
+fare per utente quanti revertha fatto agli altri 
+
+3 revert rule ( max 3 revert in 1 pag in 24 h)
+
+usare parent id per simplechain
+
+le date è meglio salvarle come 01 e non 1 per sort
