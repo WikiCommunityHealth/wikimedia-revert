@@ -6,6 +6,29 @@ The [hystory](https://en.wikipedia.org/w/index.php?title=Volcanic_rock&action=hi
 
 On wikipedia everyone can delete an edit restoring the previous edit, this is a **revert**.
 
+# Repository structure 
+all the important code is in [src/main/](src/main/)
+
+the `create` folder contains all the files used to compute a dataset 
+
+the `analyze` folder contains all the files used to analyze a dataset
+
+it's easier to understand the file names using examples:
+
+`c_admin_user_reverts_month_tsv.py`
+
+`type_class_aggregation_name_month_format.py`
+
+**type** = create (c) or analyze(a)\
+**class** = i decided to split into different logical class the files , now the two classes are admin and chains and generic \
+**aggregation** = if the file is by user or by page \
+**name** = the name of the metrics it's computing \
+**month** (optional)= if the file is by month \
+**format** = in type c the format of the output file ( tsv or json)\
+
+
+
+
 # Dataset structure 
 
 it's a tsv, each line is an event, there are different type of events: 
