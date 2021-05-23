@@ -13,7 +13,7 @@ the `create` folder contains all the files used to compute a dataset
 
 the `analyze` folder contains all the files used to analyze a dataset
 
-it's easier to understand the file names using examples:
+It's easier to understand the file names using examples:
 
 `c_admin_user_reverts_month_tsv.py`
 
@@ -44,7 +44,7 @@ it's a tsv, each line is an event, there are different type of events:
 
 
 
-# created 
+# Datasets created 
 from the wikimedia dataset i computed different other datasets
 
 
@@ -128,7 +128,7 @@ NB: the last 2 fields are _not_reg_ and _reg_ , in this case reg are registered 
 
 the data contains info about the reverts and the mutual reverts, a mutual reverts happens when in the same page if A reverts B then B reverts A 
 
-**M** is the controversiality metric computed by Yasseri 
+**M** is the controversiality metric computed by Yasseri \
 **G** is a metric that's similar to M which evalue the chains in a page(or user), when in a chain are involved users with a big edit count G will be bigger
 
 

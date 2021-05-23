@@ -166,17 +166,3 @@ inizio = datetime.now()
 print(inizio.strftime(" %H:%M:%S"))
 mutual_monthly()
 print(datetime.now() - inizio)
-# %%
-
-#%%
-import pandas as pd
-import matplotlib.pyplot as plt
-import csv
-from calendar import month_abbr
-
-file = '/home/gandelli/dev/data/admin/user/mutuals.tsv'
-
-df = pd.read_csv(file, sep='\t')
-
-
-# %%

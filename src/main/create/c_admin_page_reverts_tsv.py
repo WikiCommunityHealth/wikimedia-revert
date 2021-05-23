@@ -10,12 +10,14 @@ import re
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 output = '/home/gandelli/dev/data/admin/page/reverts.tsv'
 
+
 dump_out = open(output, 'w')
 
 def reverts():
     dump_in = bz2.open(dataset, 'r')
     line = dump_in.readline()
 
+   
     dump_out.write('page_id\tpage_name\tadm_adm\tadm_reg\treg_adm\treg_reg\tnot_reg\treg\n')
 
     reverted_user = ''
