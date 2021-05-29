@@ -31,3 +31,5 @@ class DatabaseHelper:
         cur.execute(f"DROP TABLE IF EXISTS {table_name}")
         con.commit()
         cur.close()
+
+

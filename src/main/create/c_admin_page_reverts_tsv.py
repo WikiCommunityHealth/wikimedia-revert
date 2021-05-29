@@ -18,7 +18,7 @@ def reverts():
     line = dump_in.readline()
 
    
-    dump_out.write('page_id\tpage_name\tadm_adm\tadm_reg\treg_adm\treg_reg\tnot_reg\treg\n')
+    dump_out.write('page_id\tpage_name\tyear_month\tadm_adm\tadm_reg\treg_adm\treg_reg\tnot_reg\treg\n')
 
     reverted_user = ''
     reverted_is_admin = False
@@ -26,6 +26,7 @@ def reverts():
     reverter_id = 0
     current_page_id = 0
     current_page = ''
+    current_year_month = ''
 
     n_adm_adm = 0
     n_adm_reg = 0
@@ -55,11 +56,13 @@ def reverts():
         rev_id = values[52]
         reverter = values[65]
         is_reverted = utils.to_bool((values[64]))
-        
-        # current page is finished so i can process it 
+        timestamp = datetime.strptime(values[3],'%Y-%m-%d %H:%M:%S.%f')
+        year_month = str(timestamp.year)+'-'+str(timestamp.month)
 
+        
+        # current page is finished 
         if page_id != current_page_id:
-            process_page(current_page, n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,page_id)
+            process_page(current_page, n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,page_id, current_year_month)
 
             #initialize new page 
             current_page_id = page_id
@@ -69,6 +72,12 @@ def reverts():
             n_reg_adm = 0
             n_reg_reg = 0
             n_not_reg = 0
+        else:
+            #current month finished 
+            if current_year_month != year_month:
+                process_page(current_page, n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,page_id, current_year_month)
+
+                current_year_month = year_month
 
         
         if reverter_id == rev_id:
@@ -107,12 +116,10 @@ def reverts():
 
     dump_in.close()
 
-def process_page(page_name, adm_adm, adm_reg, reg_adm, reg_reg , not_reg, page_id ):
+def process_page(page_name, adm_adm, adm_reg, reg_adm, reg_reg , not_reg, page_id, year_month ):
     reg = adm_adm+ adm_reg+ reg_adm+ reg_reg
-    if page_name == 'Toscana':
-        print(f'{page_id}\t {page_name}\t {adm_adm}\t {adm_reg}\t {reg_adm}\t {reg_reg}\t {not_reg}\t {reg}\n')
     
-    dump_out.write(f'{page_id}\t{page_name}\t{adm_adm}\t{adm_reg}\t{reg_adm}\t{reg_reg}\t{not_reg}\t{reg}\n')
+    dump_out.write(f'{page_id}\t{page_name}\t{year_month}\t{adm_adm}\t{adm_reg}\t{reg_adm}\t{reg_reg}\t{not_reg}\t{reg}\n')
 
 
 
@@ -125,3 +132,4 @@ inizio = datetime.now()
 print(inizio.strftime(" %H:%M:%S"))
 reverts()
 print(datetime.now() - inizio)
+# %%
