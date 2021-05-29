@@ -46,7 +46,7 @@ def mutual_monthly():
 
         
         # i want only namespace 0 and no vandalism
-        if line == '' or values[28] != '0' or utils.is_vandalism(values[4]):
+        if line == '' or values[28] != '0' or utils.is_vandalism(values[4]) or utils.is_bot(values[6]):
             continue
         
         #parse from dataset

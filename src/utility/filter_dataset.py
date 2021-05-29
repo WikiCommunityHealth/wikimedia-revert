@@ -7,17 +7,17 @@ from datetime import datetime
 
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 
-output_file = '/home/gandelli/dev/data/test/id85272.tsv'
+output_file = '/home/gandelli/dev/data/test/2598752.tsv'
 
 
 dump_in = bz2.open(dataset, 'r')
 output = open(output_file, "w")
 line = dump_in.readline()
 
-page_id = 85272
-page_name = 'Menelik/Sandbox'
+page_id = 2598752
+page_name = 'Ankogel_-_temp'
 stop = 'Ninetales'
-
+user = 'Ombra'
 
 massimo = 0 
 minimo = 100000000
@@ -36,12 +36,15 @@ while line != '':
 
     if values[1] != 'revision':
         continue
-    
+
+ #   if  user == values[6]:
+  #      output.write(line + '\n')
+    #     print('eccolo')
 
     if values[23] == page_id :
-        #i-=1
-        output.write(line + '\n')
-        print('eccolo')
+    #     #i-=1
+         output.write(line + '\n')
+         print('eccolo')
    # elif i > 0:
       #  output.write(line + '\n')
 
