@@ -64,11 +64,12 @@ def reverts():
         
         # current page is finished 
         if page_id != current_page_id:
-          #  process_page(current_page+ 'last', n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,current_page_id, current_year_month)
+            process_page(current_page, n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,current_page_id, current_year_month)
 
             #initialize new page 
             current_page_id = page_id
             current_page = page_name
+            current_year_month = year_month
             n_adm_adm = 0
             n_adm_reg = 0
             n_reg_adm = 0
@@ -77,7 +78,8 @@ def reverts():
         else:
             #current month finished 
             if current_year_month != year_month:
-                process_page(current_page, n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,current_page_id, year_month)
+
+                process_page(current_page, n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,current_page_id, current_year_month)
 
                 current_year_month = year_month
 

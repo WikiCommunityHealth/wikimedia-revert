@@ -7,14 +7,14 @@ from datetime import datetime
 
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 
-output_file = '/home/gandelli/dev/data/test/chiocciola.tsv'
+output_file = '/home/gandelli/dev/data/test/diecicm.tsv'
 
 
 dump_in = bz2.open(dataset, 'r')
 output = open(output_file, "w")
 line = dump_in.readline()
 
-page_id = '105152'
+page_id = '596141'
 page_name = 'Ankogel_-_temp'
 stop = 'Ninetales'
 user = 'Ombra'
@@ -43,6 +43,7 @@ while line != '':
     if values[23] == page_id :
     #     #i-=1
          output.write(line + '\n')
+         #print(line + '\n')
          print('eccolo')
    # elif i > 0:
       #  output.write(line + '\n')

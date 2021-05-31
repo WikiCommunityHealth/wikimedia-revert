@@ -79,7 +79,7 @@ def mutual_monthly():
         #current page finished 
         if current_page_id != page_id:
             values = process_page(revertors, editor, current_page_id, edit_count, groups, current_page)
-            save_page_month(current_page+'fine', values['n_adm_adm'], values['n_adm_reg'], values['n_reg_reg'],values['n_not_reg'], current_page_id, current_year_month)
+            save_page_month(current_page, values['n_adm_adm'], values['n_adm_reg'], values['n_reg_reg'],values['n_not_reg'], current_page_id, current_year_month)
 
             #initialize new page
             revertors = {}
