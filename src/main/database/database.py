@@ -15,12 +15,12 @@ class DatabaseHelper:
         cur.close()
         print('table created')
 
-    def insert_from_file(self, path):
+    def insert_from_file(self, path, table_name):
         con = self.connection
         cur = con.cursor()
         f = open(path, 'r')
         print('uploading '+ path.split('/')[-1], '...')
-        cur.copy_from(f, 'revert_user', sep='\t')
+        cur.copy_from(f, table_name, sep='\t')
         print('uploaded '+ path.split('/')[-1])
         con.commit()
 

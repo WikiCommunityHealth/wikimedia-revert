@@ -49,7 +49,7 @@ def reverts():
         #parse from dataset
         page_id = int(values[23])
         page_name = values[25]
-        user = values[7]
+        user = values[6]
         user_edit_count = values[21]
         user_is_registered = not utils.to_bool(values[17])
         user_groups = values[11]
@@ -57,12 +57,14 @@ def reverts():
         reverter = values[65]
         is_reverted = utils.to_bool((values[64]))
         timestamp = datetime.strptime(values[3],'%Y-%m-%d %H:%M:%S.%f')
-        year_month = str(timestamp.year)+'-'+str(timestamp.month)
+        #year_month = str(timestamp.year)+'-'+str(timestamp.month)
+        year_month = str(timestamp.year)+'-'+timestamp.strftime('%m')
+
 
         
         # current page is finished 
         if page_id != current_page_id:
-            process_page(current_page, n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,page_id, current_year_month)
+          #  process_page(current_page+ 'last', n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,current_page_id, current_year_month)
 
             #initialize new page 
             current_page_id = page_id
@@ -75,7 +77,7 @@ def reverts():
         else:
             #current month finished 
             if current_year_month != year_month:
-                process_page(current_page, n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,page_id, current_year_month)
+                process_page(current_page, n_adm_adm, n_adm_reg, n_reg_adm, n_reg_reg , n_not_reg ,current_page_id, year_month)
 
                 current_year_month = year_month
 
@@ -118,13 +120,11 @@ def reverts():
 
 def process_page(page_name, adm_adm, adm_reg, reg_adm, reg_reg , not_reg, page_id, year_month ):
     reg = adm_adm+ adm_reg+ reg_adm+ reg_reg
-    
-    dump_out.write(f'{page_id}\t{page_name}\t{year_month}\t{adm_adm}\t{adm_reg}\t{reg_adm}\t{reg_reg}\t{not_reg}\t{reg}\n')
+    if page_name != r'\"':
+        dump_out.write(f'{page_id}\t{page_name}\t{year_month}\t{adm_adm}\t{adm_reg}\t{reg_adm}\t{reg_reg}\t{not_reg}\t{reg}\n')
 
 
 
-
- # %%
 
 
 # %%

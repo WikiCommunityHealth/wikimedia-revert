@@ -13,7 +13,7 @@ contoedit = {}
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 dataset_tstamp = '/home/gandelli/dev/data/it/sorted_by_timestamp.tsv.bz2'
 
-output_monthly = '/home/gandelli/dev/data/admin/page/mutual_month.tsv'
+output_monthly = '/home/gandelli/dev/data/admin/page/mutuals.tsv'
 
 dump_out_monthly = open(output_monthly, 'w')
 
@@ -26,7 +26,7 @@ def mutual_monthly():
     line = dump_in.readline()
 
     # se in futuro non funzionerà è colpa di questo
-    dump_out_monthly.write('page_id\tpage_name\tyear_month\tadm_adm\tadm_reg\treg_reg\tnot_reg\treg\n') 
+    dump_out_monthly.write('page_id\tpage_name\tyear_month\tmut_adm_adm\tmut_adm_reg\tmut_reg_reg\tmut_not_reg\tmut_reg\n') 
 
     rev_id_dict = {}
     revertors = {} # revertors[username] = list of revid which reverted him
@@ -37,6 +37,7 @@ def mutual_monthly():
     current_page_id = 0
     current_page = ''
     current_year_month = ''
+    print('eccolo')
     
 
 
@@ -57,12 +58,12 @@ def mutual_monthly():
         is_reverter = utils.to_bool(values[67])
         reverter_id = values[65]
         page_id = values[23]
-        page_name = values[24]
+        page_name = values[25]
         user_edit_count = values[21]
         user_is_registered = not utils.to_bool(values[17])
         user_groups = values[11]
         timestamp = datetime.strptime(values[3],'%Y-%m-%d %H:%M:%S.%f')
-        year_month = str(timestamp.year)+'-'+str(timestamp.month)
+        year_month = str(timestamp.year)+'-'+timestamp.strftime('%m')
 
 
         #edit count
@@ -77,8 +78,8 @@ def mutual_monthly():
     
         #current page finished 
         if current_page_id != page_id:
-            values = process_page(revertors, editor, current_page_id, edit_count, groups, page_name)
-            save_page_month(page_name, values['n_adm_adm'], values['n_adm_reg'], values['n_reg_reg'],values['n_not_reg'], page_id, current_year_month)
+            values = process_page(revertors, editor, current_page_id, edit_count, groups, current_page)
+            save_page_month(current_page+'fine', values['n_adm_adm'], values['n_adm_reg'], values['n_reg_reg'],values['n_not_reg'], current_page_id, current_year_month)
 
             #initialize new page
             revertors = {}
@@ -90,9 +91,11 @@ def mutual_monthly():
         else: 
             #current month finished
             if current_year_month != year_month:
+                if current_page_id == '105152':
+                    print(current_year_month)
                 
-                values = process_page(revertors, editor, current_page_id, edit_count, groups, page_name)
-                save_page_month(page_name, values['n_adm_adm'], values['n_adm_reg'], values['n_reg_reg'],values['n_not_reg'], page_id, current_year_month)
+                values = process_page(revertors, editor, current_page_id, edit_count, groups, current_page)
+                save_page_month(current_page, values['n_adm_adm'], values['n_adm_reg'], values['n_reg_reg'],values['n_not_reg'], current_page_id, current_year_month)
                 current_year_month = year_month
         
    
@@ -151,16 +154,11 @@ def analyze_mutuals_groups(page_id, page_name, mutuals,groups):
     
     return values
 
-    reg = adm_adm + adm_reg + reg_reg
-    dump_out.write(f'{page_id}\t{page_name}\t{adm_adm}\t{adm_reg}\t{reg_reg}\t{n_not_reg}\t{reg}\n')
 
 def save_page_month(page_name, adm_adm, adm_reg, reg_reg , n_not_reg, page_id , year_month):
     reg = adm_adm + adm_reg + reg_reg
     dump_out_monthly.write(f'{page_id}\t{page_name}\t{year_month}\t{adm_adm}\t{adm_reg}\t{reg_reg}\t{n_not_reg}\t{reg}\n')
 
-
-# %%
-# %% mutual 
 
 
 # %% mutual per mese 
@@ -170,4 +168,6 @@ print(inizio.strftime(" %H:%M:%S"))
 mutual_monthly()
 
 print(datetime.now() - inizio)
+# %%
+
 # %%
