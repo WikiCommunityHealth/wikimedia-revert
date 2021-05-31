@@ -62,7 +62,8 @@ def mutual_monthly():
         user_is_registered = not utils.to_bool(values[17])
         user_groups = values[11]
         timestamp = datetime.strptime(values[3],'%Y-%m-%d %H:%M:%S.%f')
-        year_month = str(timestamp.year)+'-'+str(timestamp.month)
+        year_month = str(timestamp.year)+'-'+timestamp.strftime('%m')
+
 
 
         #edit count

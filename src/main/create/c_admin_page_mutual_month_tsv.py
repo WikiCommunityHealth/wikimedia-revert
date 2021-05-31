@@ -91,8 +91,6 @@ def mutual_monthly():
         else: 
             #current month finished
             if current_year_month != year_month:
-                if current_page_id == '105152':
-                    print(current_year_month)
                 
                 values = process_page(revertors, editor, current_page_id, edit_count, groups, current_page)
                 save_page_month(current_page, values['n_adm_adm'], values['n_adm_reg'], values['n_reg_reg'],values['n_not_reg'], current_page_id, current_year_month)
