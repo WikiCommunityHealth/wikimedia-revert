@@ -1,16 +1,18 @@
+#%%
 import re
 #reverted_m:dict containing every user a user reverted 
 #editcount:dict
 #todo: remove the biggest 
-def get_M(reverted_m:dict, edit_count:dict, page):
+def get_M(reverted_m:dict, edit_count:dict, n_involved:int):
 
     mutual = get_mutual(reverted_m, edit_count)
-    m = 0
-    for couple in mutual:
-        partial = min(edit_count[couple[0]], edit_count[couple[1]])
-        m += partial
+    values = [0]
 
-    m *= len(mutual)
+    for couple in mutual:
+        values.append(min(edit_count[couple[0]], edit_count[couple[1]]))
+
+    values.remove(max(values))
+    m =  n_involved * sum(values)
     return m
 
 def get_mutual(reverted_m:dict, edit_count:dict):
@@ -77,3 +79,6 @@ def combine_editors(revertors, editor):
                 reverted_m.setdefault(user, []).append(editor[reverter])
 
     return reverted_m
+# %%
+
+# %%

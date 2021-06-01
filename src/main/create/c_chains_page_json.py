@@ -47,6 +47,7 @@ def simple_chains(anon = False):
     reverted_m = {} # all the users a user reverted 
     edit_count = {}
     pages_m = {}
+    involved = set()
 
     #chain
     chain = []
@@ -81,6 +82,8 @@ def simple_chains(anon = False):
         user_rev_count = values[21]
         timestamp = values[3]
 
+        involved.add('user')
+
         if user_edit_count != '':
             edit_count[user] = int(user_edit_count)
         else:
@@ -96,7 +99,7 @@ def simple_chains(anon = False):
             #save past page
             if(len(chains) > 0): 
                 g, involved = utils.getG(chains)
-                m = utils.get_M(reverted_m, edit_count, current_page)
+                m = utils.get_M(reverted_m, edit_count, involved)
                 savePage(current_page, chains, page_id, n_reverts_in_chains, longest_chain, g, list(lunghezze), m, n_reverts, anon)
 
                 page_chains[current_page] = chains
@@ -112,6 +115,7 @@ def simple_chains(anon = False):
             longest_chain = 0
             lunghezze = np.zeros(200)
             reverted_m = {}
+            involved = set()
             #chain
             chain = [rev_id]
             users = {}
