@@ -136,20 +136,26 @@ the data contains info about the reverts and the mutual reverts, a mutual revert
 
 ```reverts```
 ```
-page_id     page_name    adm_adm    adm_reg     reg_adm     reg_reg     not_reg     reg
+page_id     page_name   year_month   adm_adm    adm_reg     reg_adm     reg_reg     not_reg     reg
 ```
 
 ```mutual```
 
 ```
-page_id     page_name    adm_adm    adm_reg     reg_reg     not_reg     reg
+page_id     page_name   year_month    adm_adm    adm_reg     reg_reg     not_reg     reg
 ```
 
 ### user
+```revert``
 ```
 user     group    year_month    tot_received     t_reg     t_not     t_adm     tot_done     d_reg     d_not     d_adm    
 ```
 
+```mutual``
+
+```
+user    group   page_name   year_month  mutual_with_admin   mutual_with_reg  mutual_with_not
+```
 
 
 

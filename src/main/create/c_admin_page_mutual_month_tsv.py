@@ -40,6 +40,7 @@ def mutual_monthly():
     current_page = ''
     current_year_month = ''
 
+
     
 
 

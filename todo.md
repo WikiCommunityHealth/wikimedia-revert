@@ -135,3 +135,7 @@ fare per utente quanti revertha fatto agli altri
 usare parent id per simplechain
 
 le date è meglio salvarle come 01 e non 1 per sort
+
+
+
+grafico revert per mese mettere le candele 
