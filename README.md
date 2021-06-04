@@ -146,12 +146,12 @@ page_id     page_name   year_month    adm_adm    adm_reg     reg_reg     not_reg
 ```
 
 ### user
-```revert``
+```revert```
 ```
 user     group    year_month    tot_received     t_reg     t_not     t_adm     tot_done     d_reg     d_not     d_adm    
 ```
 
-```mutual``
+```mutual```
 
 ```
 user    group   page_name   year_month  mutual_with_admin   mutual_with_reg  mutual_with_not
