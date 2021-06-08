@@ -11,5 +11,5 @@ file2 = '/home/gandelli/dev/data/admin/user/reverts.tsv'
 mut_df = pd.read_csv(file, sep='\t')
 rev_df = pd.read_csv(file2, sep='\t')
 
-df_user_month = df.groupby(['user','year_month']).sum().sort_values('mutual_with_admin')
+df_user_month = mut_df.groupby(['user','year_month']).sum().sort_values('mutual_with_admin', ascending=False)
 # %%

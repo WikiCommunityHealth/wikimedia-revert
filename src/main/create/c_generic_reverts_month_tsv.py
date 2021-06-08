@@ -7,7 +7,7 @@ from utils import utils
 
 dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
 
-output_file = '/home/gandelli/dev/data/generic/pages/reverts.tsv'
+output_file = '/home/gandelli/dev/data/generic/reverts.tsv'
 
 
 dump_in = bz2.open(dataset, 'r')
@@ -40,7 +40,7 @@ while line != '':
         continue
 
     timestamp = datetime.strptime(values[3],'%Y-%m-%d %H:%M:%S.%f')
-    year_month = str(timestamp.year)+'-'+str(timestamp.month)
+    year_month = str(timestamp.year)+'-'+timestamp.strftime('%m')
     page = values[24]
     page_id = values[23]
     

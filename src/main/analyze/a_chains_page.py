@@ -26,7 +26,7 @@ print(inizio.strftime(" %H:%M:%S"))
 output_folder = '/home/gandelli/dev/data/analyze_wars/'
 
 # read jsons file 
-dataset_folder = '/home/gandelli/dev/data/wars_json/pages/'
+dataset_folder = '/home/gandelli/dev/data/chains/pages/'
 i = 10 # number of files in the wars folder
 
 pagine = 0

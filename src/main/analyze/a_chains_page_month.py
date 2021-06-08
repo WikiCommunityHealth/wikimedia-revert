@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import csv
 from calendar import month_abbr
 
-folder = '/home/gandelli/dev/old/oldata/monthly/pages/'
+folder = '/home/gandelli/dev/data/chains/month/'
 
 
 df_rev = pd.read_csv(folder + 'reverts.tsv', sep='\t')

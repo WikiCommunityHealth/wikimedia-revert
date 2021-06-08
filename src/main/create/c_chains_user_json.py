@@ -23,7 +23,7 @@ import shutil
 from utils import utils
 
 
-dataset_folder = '/home/gandelli/dev/data/chains/pages/'
+dataset_folder = '/home/gandelli/dev/data/chains/page/'
 output = '/home/gandelli/dev/data/chains/user/'
 
 
