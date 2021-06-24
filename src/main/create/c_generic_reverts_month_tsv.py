@@ -4,10 +4,12 @@ import subprocess
 import os
 from datetime import datetime
 from utils import utils
+import sys 
 
-dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
+language = sys.argv[1]
 
-output_file = '/home/gandelli/dev/data/generic/reverts.tsv'
+dataset = f'/home/gandelli/dev/data/dumps/{language}/sorted_by_pages.tsv.bz2'
+output_file = f'/home/gandelli/dev/data/{language}/generic/reverts.tsv'
 
 
 dump_in = bz2.open(dataset, 'r')

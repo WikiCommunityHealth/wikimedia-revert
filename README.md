@@ -49,6 +49,28 @@ from the wikimedia dataset i computed different other datasets
 
 
 ```sorted_by_pages.tsv``` : same as wikimedia but only with revision events and sorted by page name
+               edits    reverts/reverted
+    2001          6       0
+    2002       1472       2
+    2003      23907     207
+    2004     431129   13592
+    2005    1657387   88938
+    2006    4894301  314799
+    2007    8109283  636507
+    2008    8818419  867780
+    2009    8803086  884355
+    2010    9242952  988517
+    2011    9394522 1175935
+    2012    9764942 1173113
+    2013    8937768 1064283
+    2014    7376637  825818
+    2015    8543088 1088518
+    2016    8242733 1028889
+    2017    9307301 1019460
+    2018    9752861 1045824
+    2019    9186886 1067841
+    2020    9130259 1041494
+
 
 ## chains 
 a chain happens when the targetted edit of a revert is a revert(which could belong to a chain)
@@ -161,7 +183,8 @@ user    group   page_name   year_month  mutual_with_admin   mutual_with_reg  mut
 
 
 
-
+# time 
+sort_dataset.py 1h for filtering  15min for sorting 1h15m total
 
 
 

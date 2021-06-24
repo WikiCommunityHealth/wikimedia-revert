@@ -8,12 +8,14 @@ import re
 import os
 import shutil
 from utils import utils
+import sys 
 
+language = sys.argv[1]
 #%%
 
-dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
+dataset = f'/home/gandelli/dev/data/dumps/{language}/sorted_by_pages.tsv.bz2'
 
-output = '/home/gandelli/dev/data/admin/user/mutuals.tsv'
+output = f'/home/gandelli/dev/data/{language}/admin/user/mutuals.tsv'
 
 dump_out = open(output, 'w')
 

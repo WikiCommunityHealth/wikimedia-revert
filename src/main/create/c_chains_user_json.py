@@ -21,10 +21,12 @@ import pandas as pd
 import os
 import shutil
 from utils import utils
+import sys 
 
+language = sys.argv[1]
 
-dataset_folder = '/home/gandelli/dev/data/chains/page/'
-output = '/home/gandelli/dev/data/chains/user/'
+dataset_folder = f'/home/gandelli/dev/data/{language}/chains/page/'
+output = f'/home/gandelli/dev/data/{language}/chains/user/'
 
 
 

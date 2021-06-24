@@ -8,12 +8,15 @@ import re
 import os
 from utils import utils
 import shutil
+import sys 
+
+language = sys.argv[1]
 
 contoedit = {}
-dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
-dataset_tstamp = '/home/gandelli/dev/data/it/sorted_by_timestamp.tsv.bz2'
+dataset = f'/home/gandelli/dev/data/dumps/{language}/sorted_by_pages.tsv.bz2'
+dataset_tstamp = f'/home/gandelli/dev/data/dumps/{language}/sorted_by_timestamp.tsv.bz2'
 
-output_monthly = '/home/gandelli/dev/data/admin/page/mutuals.tsv'
+output_monthly = f'/home/gandelli/dev/data/{language}/admin/page/mutuals.tsv'
 
 dump_out_monthly = open(output_monthly, 'w')
 

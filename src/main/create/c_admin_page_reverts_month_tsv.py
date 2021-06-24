@@ -5,10 +5,12 @@ import os
 from datetime import datetime
 from utils import utils
 import re
+import sys 
 
+language = sys.argv[1]
 
-dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
-output = '/home/gandelli/dev/data/admin/page/reverts.tsv'
+dataset = f'/home/gandelli/dev/data/dumps/{language}/sorted_by_pages.tsv.bz2'
+output = f'/home/gandelli/dev/data/{language}/admin/page/reverts.tsv'
 
 
 dump_out = open(output, 'w')

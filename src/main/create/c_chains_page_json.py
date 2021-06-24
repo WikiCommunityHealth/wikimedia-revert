@@ -9,10 +9,13 @@ import os
 import shutil
 from utils import utils
 
-dataset = '/home/gandelli/dev/data/it/sorted_by_pages.tsv.bz2'
+import sys 
+language = sys.argv[1]
 
-output = '/home/gandelli/dev/data/chains/page/'
-output_no_anon =  '/home/gandelli/dev/data/chains/page_reg/'
+dataset = f'/home/gandelli/dev/data/{language}/sorted_by_pages.tsv.bz2'
+
+output = f'/home/gandelli/dev/data/{language}/chains/page/'
+output_no_anon =  f'/home/gandelli/dev/data/{language}/chains/page_reg/'
 
 
 
@@ -213,7 +216,7 @@ def finish_files(anon):
     else:
         path = output
     for filename in os.listdir(path):
-        print(filename)
+        print('>',filename)
         dump_out = open(output+filename, 'a')
         # andrebbe cancellata la virgola, uso questo trick per farlo sintatticamente corretto
         dump_out.write('{}]')
@@ -236,24 +239,24 @@ def get_DataFrame():
 
 
 
-
+print(' ','page')
 # %% SIMPLE with anonymous users
 shutil.rmtree(output) 
 os.mkdir(output)
+print('  ','with anon')
 inizio = datetime.now()
-print(inizio.strftime(" %H:%M:%S"))
 
 s_chains, stats = simple_chains()
 sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
 
-print(datetime.now() - inizio)
+print('   ',datetime.now() - inizio)
 
 
 #%%simple without anonymous users
 shutil.rmtree(output_no_anon) 
 os.mkdir(output_no_anon)
+print('  ','without anon')
 inizio = datetime.now()
-print(inizio.strftime(" %H:%M:%S"))
 
 s_chains, stats = simple_chains(True)
 sorted(s_chains, key=lambda k: len(s_chains[k]), reverse=True)
@@ -262,7 +265,7 @@ lunga = sorted(stats.items(), key=lambda k: k[1][1], reverse=True)  # catena piu
 media = sorted(stats.items(), key=lambda k: k[1][0], reverse=True)  # media
 numero = sorted(stats.items(), key=lambda k: k[1][2], reverse=True)  # media
 
-print(datetime.now() - inizio)
+print('   ', datetime.now() - inizio)
 
 # %% COMPLEX 
 #inizio = datetime.now()

@@ -21,13 +21,15 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 from utils import utils 
+import sys 
 
+language = sys.argv[1]
 
-dataset_folder_pages = '/home/gandelli/dev/data/chains/page/'
-dataset_folder_users = '/home/gandelli/dev/data/chains/user/'
+dataset_folder_pages = f'/home/gandelli/dev/data/{language}/chains/page/'
+dataset_folder_users = f'/home/gandelli/dev/data/{language}/chains/user/'
 
-output_pages = '/home/gandelli/dev/data/chains/month/page.tsv'
-output_users = '/home/gandelli/dev/data/chains/month/user.tsv'
+output_pages = f'/home/gandelli/dev/data/{language}/chains/month/page.tsv'
+output_users = f'/home/gandelli/dev/data/{language}/chains/month/user.tsv'
 
 out_pages = open(output_pages, 'w')
 out_pages.write('titolo\tmonth\tnchain\tnrev_chain\tmean\tlongest\tmore_than5\tmore_than7\tmore_than9\tG\tinvolved\n')
