@@ -40,9 +40,13 @@ def get_users():
         line = dump_in.readline()
         while(line != ''):
             line = dump_in.readline()
-            if line == '{}]' or line == '':
+            if line == '{}]' or line == ''or line == '{}]{}]':
                 continue
-            page = json.loads(line[:-2])
+            try:
+                page = json.loads(line[:-2])
+            except:
+                print(line[:-2])
+            
             for chain in page['chains']:
                 for user in chain['users']:
                     users.setdefault(user, []).append(chain)
@@ -88,7 +92,7 @@ def save_user(name, chains, total_reverts, longest, g, lunghezze, n):
 
 def finish_files():
     for filename in os.listdir(output):
-        print(filename)
+        
         dump_out = open(output+filename, 'a')
         # andrebbe cancellata la virgola, uso questo trick per farlo sintatticamente corretto
         dump_out.write('{}]')

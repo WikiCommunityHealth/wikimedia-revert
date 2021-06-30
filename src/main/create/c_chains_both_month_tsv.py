@@ -44,9 +44,9 @@ def main():
     inizio = datetime.now()
     print(inizio.strftime(" %H:%M:%S"))
     read_json(dataset_folder_pages)             # compute pages 
-    print('pagine fatte', datetime.now() - inizio)
+    print('     pagine fatte', datetime.now() - inizio)
     read_json(dataset_folder_users)             # compute users
-    print('utenti fatti', datetime.now() - inizio)
+    print('     utenti fatti', datetime.now() - inizio)
     
 
 def read_json(path):
@@ -57,9 +57,12 @@ def read_json(path):
         line = dump_in.readline()
         while(line != ''):
             line = dump_in.readline()
-            if line == '{}]' or line == '':
+            if line == '{}]' or line == ''or line == '{}]{}]':
                 continue
-            page = json.loads(line[:-2]) # it's called page but could be also an user 
+            try:
+                page = json.loads(line[:-2]) # it's called page but could be also an user 
+            except:
+                print(line[:-2])
             by_month(page)
 
 

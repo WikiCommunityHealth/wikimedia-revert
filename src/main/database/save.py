@@ -16,11 +16,11 @@ db = DatabaseHelper()
 db.dropTable('revert_user')
 db.query(sql_create_revert_user)
 db.insert_from_file(path, 'revert_user')
-
+print('     users uploaded')
 #%% revert pages
 
 sql_create_revert_page = """CREATE TABLE public.revert_page(
-                  ilcapo bigint, page_id bigint, name text,yearmonth text,adm_adm double precision, adm_reg double precision,reg_adm double precision,reg_reg double precision,not_reg double precision,reg double precision,mut_adm_adm double precision,mut_adm_reg double precision,mut_reg_reg double precision,mut_not_reg double precision,mut_reg double precision,
+                  ilcapo bigint, page_id bigint, name text,yearmonth text,adm_adm double precision, adm_reg double precision,reg_adm double precision,reg_reg double precision,not_reg double precision,reg double precision,M double precision,mut_adm_adm double precision,mut_adm_reg double precision,mut_reg_reg double precision,mut_not_reg double precision,mut_reg double precision,
                   CONSTRAINT revert_page_pkey PRIMARY KEY ( ilcapo,page_id,name, yearmonth))"""
 
 
@@ -29,5 +29,6 @@ db = DatabaseHelper()
 db.dropTable('revert_page')
 db.query(sql_create_revert_page)
 db.insert_from_file(path, 'revert_page')
+print('     pages uploaded')
 # %%
  
