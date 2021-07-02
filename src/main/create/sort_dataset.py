@@ -20,11 +20,11 @@ output = open(output_file, "w")
 
 for year in range(2001, 2021):
 
-    dump_in = bz2.open(dataset_folder+'/it' + str(year) + '.tsv.bz2', 'r')
+    dump_in = bz2.open(dataset_folder+language+ str(year) + '.tsv.bz2', 'r')
     line = dump_in.readline()
     
 
-    print('> ora inizio a togliere tutto tranne revert e revertati dell anno ' +
+    print('    ora inizio a togliere tutto tranne revert e revertati dell anno ' +
           str(year) + "  ", datetime.now()-inizio)
 
     while line != '':
@@ -48,8 +48,8 @@ for year in range(2001, 2021):
 
 
 output.close()
-print('finito di filtrare ora inizio a sortare ', datetime.now()-inizio)
+print('    finito di filtrare ora inizio a sortare ', datetime.now()-inizio)
 subprocess.call([sort_script, language])
-print('sorted in ', datetime.now()-inizio)
+print('    sorted in ', datetime.now()-inizio)
 
 #os.remove(output_file)

@@ -4,12 +4,13 @@ import matplotlib.pyplot as plt
 import csv
 from calendar import month_abbr
 
-folder = '/home/gandelli/dev/data/chains/month/'
+folder = '/home/gandelli/dev/data/ita/chains/month/'
 
 
-df_rev = pd.read_csv(folder + 'reverts.tsv', sep='\t')
-df = pd.read_csv(folder + 'chains.tsv', sep='\t')
+#df_rev = pd.read_csv(folder + 'reverts.tsv', sep='\t')
+df = pd.read_csv(folder + 'page.tsv', sep='\t')
 df['month'] = pd.to_datetime(df.month)
+
 
 
 #CHAINS
@@ -57,3 +58,16 @@ for i in range(2010,2021):
 
 
 # %%
+def plot_user_chain_by_month(title):
+    a = df[df['titolo'] == title]
+    b = a.groupby('month').count()
+
+    plt.style.use('seaborn')
+    ax = b['titolo'].plot.bar(figsize=(25,5))
+    ax.set_xticks(ax.get_xticks()[::12])
+    plt.gcf().autofmt_xdate()
+    plt.title(title)
+
+plot_user_chain_by_month('Serie_A')
+# %%
+;

@@ -15,7 +15,7 @@ language = sys.argv[1]
 
 contoedit = {}
 
-dataset_tstamp = f'/home/gandelli/dev/data/dumps/{language}/sorted_by_timestamp.tsv.bz2'
+dataset_tstamp = f'/home/gandelli/dev/data/{language}/sorted_by_timestamp.tsv.bz2'
 output_monthly = f'/home/gandelli/dev/data/{language}/admin/user/reverts.tsv'
 
 

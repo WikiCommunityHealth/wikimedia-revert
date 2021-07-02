@@ -20,7 +20,7 @@ mkdir -p /home/gandelli/dev/data/"$LANG"/chains/page_reg/
 
 START="$(date -u +%M)"
 echo inizio 
-#python3 /home/gandelli/dev/wikimedia-revert/src/main/create/sort_dataset.py "$LANG"
+python3 /home/gandelli/dev/wikimedia-revert/src/main/create/sort_dataset.py "$LANG"
 now="$(date -u +%M)"
 echo "$TAB" sorted and filtered "$(($now-$START))" min
 echo

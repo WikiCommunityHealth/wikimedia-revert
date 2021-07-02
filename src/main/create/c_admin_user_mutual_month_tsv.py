@@ -13,7 +13,7 @@ import sys
 language = sys.argv[1]
 #%%
 
-dataset = f'/home/gandelli/dev/data/dumps/{language}/sorted_by_pages.tsv.bz2'
+dataset = f'/home/gandelli/dev/data/{language}/sorted_by_pages.tsv.bz2'
 
 output = f'/home/gandelli/dev/data/{language}/admin/user/mutuals.tsv'
 

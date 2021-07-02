@@ -102,7 +102,8 @@ def simple_chains(anon = False):
             #save past page
             if(len(chains) > 0): 
                 g, involved = utils.getG(chains)
-                m = utils.get_M(reverted_m, edit_count, involved)
+                m = utils.get_M(reverted_m, edit_count, len(involved))
+                
                 savePage(current_page, chains, page_id, n_reverts_in_chains, longest_chain, g, list(lunghezze), m, n_reverts, anon)
 
                 page_chains[current_page] = chains
@@ -182,7 +183,7 @@ def more_than_bot(users):
 
     return utenti/bot > 1
             
-def savePage(title, chains, id, n_reverts_in_chains, longest, g, lunghezze,m, n_reverts, anon):
+def savePage(title, chains, id, n_reverts_in_chains, longest, g, lunghezze, m, n_reverts, anon):
     #print('salvo la pagina', title)
 
 
