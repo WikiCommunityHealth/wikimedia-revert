@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import csv
 from calendar import month_abbr
 
-folder = '/home/gandelli/dev/data/ita/chains/month/'
+folder = '/home/gandelli/dev/data/ca/chains/month/'
 
 
 #df_rev = pd.read_csv(folder + 'reverts.tsv', sep='\t')
@@ -20,7 +20,7 @@ grouped['titolo'].to_csv(folder + 'grouped_by_month.tsv', sep="\t", quoting=csv.
 
 plt.style.use('seaborn')
 grouped['titolo'].plot()
-plt.savefig('/home/gandelli/dev/data/plots/page_per_chain_global.png', dpi=300, bbox_inches='tight')
+#plt.savefig('/home/gandelli/dev/data/plots/page_per_chain_global.png', dpi=300, bbox_inches='tight')
 
 
 # the same of above but one line per year 
@@ -30,7 +30,7 @@ x = month_abbr[1:13]
 for i in range(2010,2021):
     plt.plot(x,grouped[grouped['month'].dt.year == i]['titolo'], label = i)
 
-plt.savefig('/home/gandelli/dev/data/plots/page_per_chain_by_year.png', dpi=300, bbox_inches='tight')
+#plt.savefig('/home/gandelli/dev/data/plots/page_per_chain_by_year.png', dpi=300, bbox_inches='tight')
 
 # %% number of months that a page has at least a chain 
 grouped = df.groupby('titolo').count().sort_values('month', ascending = False)
@@ -38,7 +38,7 @@ grouped['month'].to_csv(folder + 'grouped_by_page_sorted.tsv', sep="\t", quoting
 
 
 # %% pages which have >2 chains longer than 9 sorted by controversiality
-df[df['more_than9'] > 2].sort_values('M', ascending=False)
+df[df['more_than5'] > 2].sort_values('G', ascending=False)
 
 
 #REVERTS
@@ -68,6 +68,28 @@ def plot_user_chain_by_month(title):
     plt.gcf().autofmt_xdate()
     plt.title(title)
 
-plot_user_chain_by_month('Serie_A')
+plot_user_chain_by_month('Juventus_Football_Club')
 # %%
-;
+plt.style.use('bmh')
+
+a = df[df['titolo'] == 'Juventus_Football_Club']
+a = a[['titolo','month','G','nchain']]
+ax = a.plot('month','nchain', color='red')
+a.plot('month','G',secondary_y=True, ax=ax,color='green')
+plt.savefig('/home/gandelli/dev/data/plots/chains_page.png', dpi=300, bbox_inches='tight')
+
+# %%
+titolo = 'Barcelona'
+plt.style.use('bmh')
+
+a = df[df['titolo'] == titolo]
+a = a[['titolo','month','G','nrev_chain']]
+ax = a.plot('month','nchain', color='red')
+a.plot('month','G',secondary_y=True, ax=ax,color='green')
+plt.savefig('/home/gandelli/dev/data/plots/chains_page.png', dpi=300, bbox_inches='tight')
+
+# %%
+df = df[df['titolo'] == titolo]
+df = df[df['nchain'] == 6]
+
+# %%

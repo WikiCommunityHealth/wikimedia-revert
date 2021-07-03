@@ -26,7 +26,7 @@ print(inizio.strftime(" %H:%M:%S"))
 output_folder = '/home/gandelli/dev/data/ca/chains/results/'
 
 # read jsons file 
-dataset_folder = '/home/gandelli/dev/data/ita/chains/page/'
+dataset_folder = '/home/gandelli/dev/data/es/chains/page/'
 i = 10 # number of files in the wars folder
 
 pagine = 0
@@ -42,6 +42,7 @@ m_pages_df = []
 reverts_df = []
 nchains_df = []
 serieA = {}
+pino = {}
 
 for i in range (0,i):
     dump_in = open(f"{dataset_folder}wars_{i}.json")
@@ -52,13 +53,16 @@ for i in range (0,i):
             continue
 
         page = json.loads(line[:-2])
-
+        
         m_pages_df.append({ 'title': page['title'], 'M': page['M'], 'G':  page['G']})
         reverts_df.append((page['title'], page['n_reverts'],page['n_reverts_in_chains']))
-        nchains_df.append({ 'title': page['title'], 'n_chains' : page['n_chains']})
+        nchains_df.append({ 'title': page['title'], 'n_chains' : page['n_chains'], 'longest': page['longest']})
 
-        if page['title'] == 'Serie_A':
+        if page['title'] == 'Juventus_Football_Club':
             serieA = page
+        
+        if page['title'] == 'Barcelona':
+            pino = page
 
         reverts[page['title']] = page['longest']
         for chain in page['chains']:
@@ -141,4 +145,7 @@ reverts_df = reverts_df.sort_values('rapporto', ascending=False)
 #reverts_df.to_csv(output_folder + 'reverts_chain.tsv', sep="\t", quoting=csv.QUOTE_NONE)
 
 
+# %% per il numero di revert in chain e non 
+df = pd.DataFrame(reverts_df, columns=['title', 'rev', 'inchain'])
+df.sum()
 # %%
