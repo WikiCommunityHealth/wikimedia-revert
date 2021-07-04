@@ -26,7 +26,7 @@ print(inizio.strftime(" %H:%M:%S"))
 output_folder = '/home/gandelli/dev/data/ca/chains/results/'
 
 # read jsons file 
-dataset_folder = '/home/gandelli/dev/data/es/chains/page/'
+dataset_folder = '/home/gandelli/dev/data/en/chains/page/'
 i = 10 # number of files in the wars folder
 
 pagine = 0
@@ -61,7 +61,7 @@ for i in range (0,i):
         if page['title'] == 'Juventus_Football_Club':
             serieA = page
         
-        if page['title'] == 'Barcelona':
+        if page['title'] == 'Matt_Dillon':
             pino = page
 
         reverts[page['title']] = page['longest']
@@ -148,4 +148,8 @@ reverts_df = reverts_df.sort_values('rapporto', ascending=False)
 # %% per il numero di revert in chain e non 
 df = pd.DataFrame(reverts_df, columns=['title', 'rev', 'inchain'])
 df.sum()
+# %%
+df = pd.DataFrame(nchains_df)
+df = df.sort_values('longest', ascending=False).head(15)
+df
 # %%

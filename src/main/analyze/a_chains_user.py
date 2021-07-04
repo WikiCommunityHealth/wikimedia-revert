@@ -51,14 +51,14 @@ for i in range (0,i):
         
         stats.append({ 'user': page['user'],'n_chains': page['n_chains'],'mean' :page['mean'] ,'n_reverts': page['n_reverts'] ,'G':  page['G']})
 
-        if page['user'] == 'CarlesMartin':
+        if page['user'] == 'CristianCantoro':
             serieA = page
         
         if page['user'] == 'Barcelona':
             pino = page
 
         reverts[page['user']] = page['longest']
-        if page['user'] == 'Phantomas':
+        if page['user'] == 'CristianCantoro':
             for chain in page['chains']:
                 pages.append({'user':page['user'], 'page': chain['page']})
                 

@@ -4,12 +4,14 @@ import matplotlib.pyplot as plt
 import csv
 from calendar import month_abbr
 
-folder = '/home/gandelli/dev/data/ca/admin/page/'
+folder = '/home/gandelli/dev/data/es/admin/page/'
 file = 'reverts.tsv'
 mutual = 'mutuals.tsv'
 
 
 df = pd.read_csv(folder + file, sep='\t').dropna()
+df_mut =pd.read_csv(folder + mutual, sep='\t').dropna()
+
 #%%
 df['not_rev_on_total'] = df['not_reg']/ (df['not_reg'] + df['reg'])
 df['rev_on_total'] = df['reg']/ (df['not_reg'] + df['reg'])
@@ -38,6 +40,25 @@ df = pd.read_csv(folder + mutual, sep='\t')
 # %%
 df.plot('year_month', 'adm_adm')
 # %%
+
 dfg = df.groupby('year_month').sum().drop(['page_id','not_reg','reg'],1)
+dfg = dfg[['reg_reg', 'adm_reg','reg_adm', 'adm_adm']]
 dfg.plot()
+plt.title('spanish')
+plt.savefig('/home/gandelli/dev/data/plots/admin_es.png', dpi=300, bbox_inches='tight')
+
+# %%
+
+
+df['year_month'] = pd.to_datetime(df.year_month)
+grouped = df.groupby('year_month', as_index=False).count().sort_values('year_month')
+plt.figure(figsize=(15,8))
+x = month_abbr[1:13]
+for i in range(2010,2021):
+    plt.plot(x,grouped[grouped['year_month'].dt.year == i]['reg_reg'], label = i)
+
+plt.legend()
+plt.title('catalan ')
+plt.savefig('/home/gandelli/dev/data/plots/admin_year_ca.png', dpi=300, bbox_inches='tight')
+
 # %%
